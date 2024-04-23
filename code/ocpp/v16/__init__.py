@@ -12,6 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+@file      : __init__.py
+@author    : Jack Sun (jack.sun@quectel.com)
+@brief     : <Description>
+@version   : v1.0.0
+@date      : 2024-04-23 15:57:26
+@copyright : Copyright (c) 2024
+"""
+
 from usr.ocpp.charge_point import ChargePoint as cp
 from usr.ocpp.v16 import call, call_result
 

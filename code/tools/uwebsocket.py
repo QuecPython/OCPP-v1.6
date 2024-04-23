@@ -12,6 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+@file      : uwebsocket.py
+@author    : Jack Sun (jack.sun@quectel.com)
+@brief     : <Description>
+@version   : v1.0.0
+@date      : 2024-03-27 09:02:33
+@copyright : Copyright (c) 2024
+"""
+
 import log
 import ure as re
 import usocket as socket

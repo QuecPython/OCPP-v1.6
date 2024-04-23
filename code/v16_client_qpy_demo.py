@@ -24,37 +24,39 @@
 @copyright :Copyright (c) 2024
 """
 
+import gc
 import modem
 import utime
 import _thread
 
 from usr.tools import uwebsocket, logging
-from usr.ocpp.v16 import call, call_result
+from usr.ocpp.routing import on
 from usr.ocpp.v16 import ChargePoint as cp
 from usr.ocpp.v16.enums import (
+    Action,
     RegistrationStatus,
     CancelReservationStatus,
     CertificateSignedStatus,
-    AvailabilityType,
+    # AvailabilityType,
     AvailabilityStatus,
     ConfigurationStatus,
     ClearCacheStatus,
-    ChargingProfilePurposeType,
+    # ChargingProfilePurposeType,
     HashAlgorithm,
     ClearChargingProfileStatus,
     DeleteCertificateStatus,
-    MessageTrigger,
+    # MessageTrigger,
     TriggerMessageStatus,
     ChargingRateUnitType,
     GetCompositeScheduleStatus,
-    CertificateUse,
+    # CertificateUse,
     GetInstalledCertificateStatus,
-    Log,
-    ChargingProfileKindType,
-    RecurrencyKind,
-    ResetType,
-    UpdateType,
-    AuthorizationStatus,
+    # Log,
+    # ChargingProfileKindType,
+    # RecurrencyKind,
+    # ResetType,
+    # UpdateType,
+    # AuthorizationStatus,
     DiagnosticsStatus,
     FirmwareStatus,
     UploadLogStatus,
@@ -67,24 +69,39 @@ from usr.ocpp.v16.enums import (
     Reason,
     ChargePointErrorCode,
     ChargePointStatus,
+    LogStatus,
+    CertificateStatus,
+    RemoteStartStopStatus,
+    ReservationStatus,
+    ResetStatus,
+    UpdateStatus,
+    ChargingProfileStatus,
+    UpdateFirmwareStatus,
+    UnlockStatus,
+    DataTransferStatus,
 )
 from usr.ocpp.v16.datatypes import (
     CertificateHashData,
-    LogParameters,
-    ChargingProfile,
-    AuthorizationData,
-    IdTagInfo,
-    Firmware,
+    # LogParameters,
+    # ChargingProfile,
+    # AuthorizationData,
+    # IdTagInfo,
+    # Firmware,
     MeterValue,
     SampledValue,
     ChargingSchedule,
     ChargingSchedulePeriod,
+    KeyValue,
 )
 
 logger = logging.getLogger(__name__)
 
-
-IMEI = modem.getDevImei()
+if hasattr(modem, "getDevMAC"):
+    IMEI = modem.getDevMAC()
+elif hasattr(modem, "getDevImei"):
+    IMEI = modem.getDevImei()
+else:
+    IMEI = "0001"
 
 
 def utcnow():
@@ -95,8 +112,18 @@ def utcnow():
 
 class ChargePoint(cp):
 
+    def send_authorize(self):
+        request = self._call.AuthorizePayload(
+            id_tag="id_tag",
+        )
+        response = self.call(request)
+        logger.info("response %s" % response)
+
+        if isinstance(response, self._call_result.AuthorizePayload):
+            logger.info("id_tag_info %s." % response.id_tag_info)
+
     def send_boot_notification(self):
-        request = call.BootNotificationPayload(
+        request = self._call.BootNotificationPayload(
             charge_point_model="ICU Eve Mini",
             charge_point_vendor="Alfen BV",
             firmware_version="#1:3.4.0-2990#N:217H;1.0-223"
@@ -107,419 +134,47 @@ class ChargePoint(cp):
         if response.status == RegistrationStatus.accepted:
             logger.info("Connected to central system.")
 
-    def send_cancel_reservation(self):
-        request = call.CancelReservationPayload(
-            reservation_id=123
-        )
-        response = self.call(request)
-        logger.info("response %s" % response)
-
-        if response.status == CancelReservationStatus.accepted:
-            logger.info("Cancel reservation status %s." % response.status)
-
-    def send_certificate_signed(self):
-        request = call.CertificateSignedPayload(
-            certificate_chain="TEST_CERTIFICATE_CHAIN"
-        )
-        response = self.call(request)
-        logger.info("response %s" % response)
-
-        if response.status == CertificateSignedStatus.accepted:
-            logger.info("Certificate signed status %s." % response.status)
-
-    def send_change_availability(self):
-        request = call.ChangeAvailabilityPayload(
-            connector_id=123,
-            type=AvailabilityType.inoperative
-        )
-        response = self.call(request)
-        logger.info("response %s" % response)
-
-        if response.status == AvailabilityStatus.accepted:
-            logger.info("Change availability status %s." % response.status)
-
-    def send_change_configuration(self):
-        request = call.ChangeConfigurationPayload(
-            key="period",
-            value="30"
-        )
-        response = self.call(request)
-        logger.info("response %s" % response)
-
-        if response.status == ConfigurationStatus.accepted:
-            logger.info("Change configuration status %s." % response.status)
-
-    def send_clear_cache(self):
-        request = call.ClearCachePayload()
-        response = self.call(request)
-        logger.info("response %s" % response)
-
-        if response.status == ClearCacheStatus.accepted:
-            logger.info("Clear cache status %s." % response.status)
-
-    def send_clear_charging_profile(self):
-        request = call.ClearChargingProfilePayload(
-            id=123,
-            connector_id=456,
-            charging_profile_purpose=ChargingProfilePurposeType.charge_point_max_profile,
-            stack_level=789,
-        )
-        response = self.call(request)
-        logger.info("response %s" % response)
-
-        if response.status == ClearChargingProfileStatus.accepted:
-            logger.info("Clear charging profile status %s." % response.status)
-
-    def send_delete_certificate(self):
-        request = call.DeleteCertificatePayload(
-            certificate_hash_data=CertificateHashData(
-                hash_algorithm=HashAlgorithm.sha256,
-                issuer_name_hash="issuer_name_hash",
-                issuer_key_hash="issuer_key_hash",
-                serial_number="serial_number",
-            )
-        )
-        response = self.call(request)
-        logger.info("response %s" % response)
-
-        if response.status == DeleteCertificateStatus.accepted:
-            logger.info("Delete certificate status %s." % response.status)
-
-    def send_extended_trigger_message(self):
-        request = call.ExtendedTriggerMessagePayload(
-            requested_message=MessageTrigger.boot_notification,
-            connector_id=123,
-        )
-        response = self.call(request)
-        logger.info("response %s" % response)
-
-        if response.status == TriggerMessageStatus.accepted:
-            logger.info("Extended trigger message status %s." % response.status)
-
-    def send_get_composite_schedule(self):
-        request = call.GetCompositeSchedulePayload(
-            connector_id=123,
-            duration=10,
-            charging_rate_unit=ChargingRateUnitType.watts,
-        )
-        response = self.call(request)
-        logger.info("response %s" % response)
-
-        if response.status == GetCompositeScheduleStatus.accepted:
-            logger.info("Extended trigger message status %s." % response.status)
-            logger.info(
-                "connector_id %s, schedule_start %s, charging_schedule %s" % (
-                    response.connector_id, response.schedule_start, response.charging_schedule
-                )
-            )
-
-    def send_get_configuration(self):
-        request = call.GetConfigurationPayload(
-            key=["Config1", "Config2", "Config3"]
-        )
-        response = self.call(request)
-        logger.info("response %s" % response)
-
-        if isinstance(response, call_result.GetConfigurationPayload):
-            logger.info("configuration_key %s." % response.configuration_key)
-            logger.info("unknown_key %s." % response.unknown_key)
-
-    def send_get_diagnostics(self):
-        request = call.GetDiagnosticsPayload(
-            location="location",
-            retries=10,
-            retry_interval=10,
-            start_time=utcnow(),
-            stop_time=utcnow(),
-        )
-        response = self.call(request)
-        logger.info("response %s" % response)
-
-        if isinstance(response, call_result.GetDiagnosticsPayload):
-            logger.info("file_name %s." % response.file_name)
-
-    def send_get_installed_certificate_ids(self):
-        request = call.GetInstalledCertificateIdsPayload(
-            certificate_type=CertificateUse.central_system_root_certificate
-        )
-        response = self.call(request)
-        logger.info("response %s" % response)
-
-        if response.status == GetInstalledCertificateStatus.accepted:
-            logger.info("certificate_hash_data %s." % response.certificate_hash_data)
-
-    def send_get_local_list_version(self):
-        request = call.GetLocalListVersionPayload()
-        response = self.call(request)
-        logger.info("response %s" % response)
-
-        if isinstance(response, call_result.GetLocalListVersionPayload):
-            logger.info("list_version %s." % response.list_version)
-
-    def send_get_log(self):
-        request = call.GetLogPayload(
-            log=LogParameters(
-                remote_location="remote_location",
-                oldest_timestamp=utcnow(),
-                latest_timestamp=utcnow()
-            ),
-            log_type=Log.diagnostics_log,
-            request_id=123,
-            retries=3,
-            retry_interval=10,
-        )
-        response = self.call(request)
-        logger.info("response %s" % response)
-
-        if isinstance(response, call_result.GetLogPayload):
-            logger.info("status %s." % response.status)
-            logger.info("filename %s." % response.filename)
-
-    def send_install_certificate(self):
-        request = call.InstallCertificatePayload(
-            certificate_type=CertificateUse.central_system_root_certificate,
-            certificate="certificate"
-        )
-        response = self.call(request)
-        logger.info("response %s" % response)
-
-        if isinstance(response, call_result.InstallCertificatePayload):
-            logger.info("status %s." % response.status)
-
-    def send_remote_start_transaction(self):
-        request = call.RemoteStartTransactionPayload(
-            id_tag="id_tag",
-            connector_id=123,
-            charging_profile=ChargingProfile(
-                charging_profile_id=123,
-                stack_level=456,
-                charging_profile_purpose=ChargingProfilePurposeType.charge_point_max_profile,
-                charging_profile_kind=ChargingProfileKindType.absolute,
-                charging_schedule=ChargingSchedule(
-                    charging_rate_unit=ChargingRateUnitType.watts,
-                    charging_schedule_period=[
-                        ChargingSchedulePeriod(
-                            start_period=10,
-                            limit=20.0,
-                            number_phases=30
-                        ),
-                    ],
-                    duration=10,
-                    start_schedule=utcnow(),
-                    min_charging_rate=20.0
-                ),
-                transaction_id=789,
-                recurrency_kind=RecurrencyKind.daily,
-                valid_from=utcnow(),
-                valid_to=utcnow(),
-            ),
-        )
-        response = self.call(request)
-        logger.info("response %s" % response)
-
-        if isinstance(response, call_result.RemoteStartTransactionPayload):
-            logger.info("status %s." % response.status)
-
-    def send_remote_stop_transaction(self):
-        request = call.RemoteStopTransactionPayload(
-            transaction_id=123,
-        )
-        response = self.call(request)
-        logger.info("response %s" % response)
-
-        if isinstance(response, call_result.RemoteStopTransactionPayload):
-            logger.info("status %s." % response.status)
-
-    def send_reserve_now(self):
-        request = call.ReserveNowPayload(
-            connector_id=123,
-            expiry_date=utcnow(),
-            id_tag="id_tag",
-            reservation_id=456,
-            parent_id_tag="parent_id_tag",
-        )
-        response = self.call(request)
-        logger.info("response %s" % response)
-
-        if isinstance(response, call_result.ReserveNowPayload):
-            logger.info("status %s." % response.status)
-
-    def send_reset(self):
-        request = call.ResetPayload(
-            type=ResetType.hard
-        )
-        response = self.call(request)
-        logger.info("response %s" % response)
-
-        if isinstance(response, call_result.ResetPayload):
-            logger.info("status %s." % response.status)
-
-    def send_send_local_list(self):
-        request = call.SendLocalListPayload(
-            list_version=123,
-            update_type=UpdateType.differential,
-            local_authorization_list=[
-                AuthorizationData(
-                    id_tag="id_tag",
-                    id_tag_info=IdTagInfo(
-                        status=AuthorizationStatus.accepted,
-                        parent_id_tag="parent_id_tag",
-                        expiry_date=utcnow()
-                    )
-                ),
-                AuthorizationData(
-                    id_tag="id_tag",
-                    id_tag_info=IdTagInfo(
-                        status=AuthorizationStatus.accepted,
-                        parent_id_tag="parent_id_tag",
-                        expiry_date=utcnow()
-                    )
-                ),
-            ],
-        )
-        response = self.call(request)
-        logger.info("response %s" % response)
-
-        if isinstance(response, call_result.SendLocalListPayload):
-            logger.info("status %s." % response.status)
-
-    def send_set_charging_profile(self):
-        request = call.SetChargingProfilePayload(
-            connector_id=123,
-            cs_charging_profiles=ChargingProfile(
-                charging_profile_id=123,
-                stack_level=456,
-                charging_profile_purpose=ChargingProfilePurposeType.charge_point_max_profile,
-                charging_profile_kind=ChargingProfileKindType.absolute,
-                charging_schedule=ChargingSchedule(
-                    charging_rate_unit=ChargingRateUnitType.watts,
-                    charging_schedule_period=[
-                        ChargingSchedulePeriod(
-                            start_period=10,
-                            limit=20.0,
-                            number_phases=30
-                        ),
-                    ],
-                    duration=10,
-                    start_schedule=utcnow(),
-                    min_charging_rate=20.0
-                ),
-                transaction_id=789,
-                recurrency_kind=RecurrencyKind.daily,
-                valid_from=utcnow(),
-                valid_to=utcnow(),
-            )
-        )
-        response = self.call(request)
-        logger.info("response %s" % response)
-
-        if isinstance(response, call_result.SetChargingProfilePayload):
-            logger.info("status %s." % response.status)
-
-    def send_signed_update_firmware(self):
-        request = call.SignedUpdateFirmwarePayload(
-            request_id=123,
-            firmware=Firmware(
-                location="location",
-                retrieve_date_time=utcnow(),
-                signing_certificate="signing_certificate",
-                signature="signature",
-                install_date_time=utcnow()
-            ),
-            retries=3,
-            retry_interval=10
-        )
-        response = self.call(request)
-        logger.info("response %s" % response)
-
-        if isinstance(response, call_result.SignedUpdateFirmwarePayload):
-            logger.info("status %s." % response.status)
-
-    def send_trigger_message(self):
-        request = call.TriggerMessagePayload(
-            requested_message=MessageTrigger.boot_notification,
-            connector_id=123
-        )
-        response = self.call(request)
-        logger.info("response %s" % response)
-
-        if isinstance(response, call_result.TriggerMessagePayload):
-            logger.info("status %s." % response.status)
-
-    def send_unlock_connector(self):
-        request = call.UnlockConnectorPayload(
-            connector_id=123
-        )
-        response = self.call(request)
-        logger.info("response %s" % response)
-
-        if isinstance(response, call_result.UnlockConnectorPayload):
-            logger.info("status %s." % response.status)
-
-    def send_update_firmware(self):
-        request = call.UpdateFirmwarePayload(
-            location="http://www.quectel.com",
-            retrieve_date=utcnow(),
-            retries=3,
-            retry_interval=10,
-        )
-        response = self.call(request)
-        logger.info("response %s" % response)
-
-        if isinstance(response, call_result.UpdateFirmwarePayload):
-            logger.info("response %s." % response)
-
-    def send_authorize(self):
-        request = call.AuthorizePayload(
-            id_tag="id_tag",
-        )
-        response = self.call(request)
-        logger.info("response %s" % response)
-
-        if isinstance(response, call_result.AuthorizePayload):
-            logger.info("id_tag_info %s." % response.id_tag_info)
-
     def send_diagnostics_status_notification(self):
-        request = call.DiagnosticsStatusNotificationPayload(
+        request = self._call.DiagnosticsStatusNotificationPayload(
             status=DiagnosticsStatus.idle,
         )
         response = self.call(request)
         logger.info("response %s" % response)
 
-        if isinstance(response, call_result.DiagnosticsStatusNotificationPayload):
+        if isinstance(response, self._call_result.DiagnosticsStatusNotificationPayload):
             logger.info("response %s." % response)
 
     def send_firmware_status_notification(self):
-        request = call.FirmwareStatusNotificationPayload(
+        request = self._call.FirmwareStatusNotificationPayload(
             status=FirmwareStatus.downloaded,
         )
         response = self.call(request)
         logger.info("response %s" % response)
 
-        if isinstance(response, call_result.FirmwareStatusNotificationPayload):
+        if isinstance(response, self._call_result.FirmwareStatusNotificationPayload):
             logger.info("response %s." % response)
 
     def send_heartbeat(self):
-        request = call.HeartbeatPayload()
+        request = self._call.HeartbeatPayload()
         response = self.call(request)
         logger.info("response %s" % response)
 
-        if isinstance(response, call_result.HeartbeatPayload):
+        if isinstance(response, self._call_result.HeartbeatPayload):
             logger.info("current_time %s." % response.current_time)
 
     def send_log_status_notification(self):
-        request = call.LogStatusNotificationPayload(
+        request = self._call.LogStatusNotificationPayload(
             status=UploadLogStatus.bad_message,
             request_id=123,
         )
         response = self.call(request)
         logger.info("response %s" % response)
 
-        if isinstance(response, call_result.LogStatusNotificationPayload):
+        if isinstance(response, self._call_result.LogStatusNotificationPayload):
             logger.info("response %s." % response)
 
     def send_meter_values_payload(self):
-        request = call.MeterValuesPayload(
+        request = self._call.MeterValuesPayload(
             connector_id=123,
             meter_value=[
                 MeterValue(
@@ -542,11 +197,11 @@ class ChargePoint(cp):
         response = self.call(request)
         logger.info("response %s" % response)
 
-        if isinstance(response, call_result.MeterValuesPayload):
+        if isinstance(response, self._call_result.MeterValuesPayload):
             logger.info("response %s." % response)
 
     def send_security_event_notification(self):
-        request = call.SecurityEventNotificationPayload(
+        request = self._call.SecurityEventNotificationPayload(
             type="test_type",
             timestamp=utcnow(),
             tech_info="tech_info"
@@ -554,32 +209,32 @@ class ChargePoint(cp):
         response = self.call(request)
         logger.info("response %s" % response)
 
-        if isinstance(response, call_result.SecurityEventNotificationPayload):
+        if isinstance(response, self._call_result.SecurityEventNotificationPayload):
             logger.info("response %s." % response)
 
     def send_sign_certificate(self):
-        request = call.SignCertificatePayload(
+        request = self._call.SignCertificatePayload(
             csr="csr"
         )
         response = self.call(request)
         logger.info("response %s" % response)
 
-        if isinstance(response, call_result.SignCertificatePayload):
+        if isinstance(response, self._call_result.SignCertificatePayload):
             logger.info("status %s." % response.status)
 
     def send_signed_firmware_status_notification(self):
-        request = call.SignedFirmwareStatusNotificationPayload(
+        request = self._call.SignedFirmwareStatusNotificationPayload(
             status=FirmwareStatus.downloaded,
             request_id=123,
         )
         response = self.call(request)
         logger.info("response %s" % response)
 
-        if isinstance(response, call_result.SignedFirmwareStatusNotificationPayload):
+        if isinstance(response, self._call_result.SignedFirmwareStatusNotificationPayload):
             logger.info("response %s." % response)
 
     def send_start_transaction(self):
-        request = call.StartTransactionPayload(
+        request = self._call.StartTransactionPayload(
             connector_id=123,
             id_tag="id_tag",
             meter_start=456,
@@ -589,12 +244,12 @@ class ChargePoint(cp):
         response = self.call(request)
         logger.info("response %s" % response)
 
-        if isinstance(response, call_result.StartTransactionPayload):
+        if isinstance(response, self._call_result.StartTransactionPayload):
             logger.info("transaction_id %s." % response.transaction_id)
             logger.info("id_tag_info %s." % response.id_tag_info)
 
     def send_stop_transaction(self):
-        request = call.StopTransactionPayload(
+        request = self._call.StopTransactionPayload(
             meter_stop=123,
             timestamp=utcnow(),
             transaction_id=456,
@@ -620,11 +275,11 @@ class ChargePoint(cp):
         response = self.call(request)
         logger.info("response %s" % response)
 
-        if isinstance(response, call_result.StopTransactionPayload):
+        if isinstance(response, self._call_result.StopTransactionPayload):
             logger.info("id_tag_info %s." % response.id_tag_info)
 
     def send_status_notification(self):
-        request = call.StatusNotificationPayload(
+        request = self._call.StatusNotificationPayload(
             connector_id=123,
             error_code=ChargePointErrorCode.connector_lock_failure,
             status=ChargePointStatus.available,
@@ -636,11 +291,11 @@ class ChargePoint(cp):
         response = self.call(request)
         logger.info("response %s" % response)
 
-        if isinstance(response, call_result.StatusNotificationPayload):
+        if isinstance(response, self._call_result.StatusNotificationPayload):
             logger.info("response %s." % response)
 
     def send_data_transfer(self):
-        request = call.DataTransferPayload(
+        request = self._call.DataTransferPayload(
             vendor_id="vendor_id",
             message_id="message_id",
             data="data"
@@ -648,27 +303,307 @@ class ChargePoint(cp):
         response = self.call(request)
         logger.info("response %s" % response)
 
-        if isinstance(response, call_result.DataTransferPayload):
+        if isinstance(response, self._call_result.DataTransferPayload):
             logger.info("status %s." % response.status)
             logger.info("data %s." % response.data)
 
+    @on(Action.CancelReservation)
+    def on_cancel_reservation(self, reservation_id):
+        logger.info("reservation_id %s" % (reservation_id))
 
-if __name__ == "__main__":
+        return self._call_result.CancelReservationPayload(
+            status=CancelReservationStatus.accepted
+        )
+
+    @on(Action.CertificateSigned)
+    def on_certificate_signed(self, certificate_chain):
+        logger.info("certificate_chain %s" % (certificate_chain))
+
+        return self._call_result.CertificateSignedPayload(
+            status=CertificateSignedStatus.accepted
+        )
+
+    @on(Action.ChangeAvailability)
+    def on_change_availability(self, connector_id, type):
+        logger.info("connector_id %s, type %s" % (connector_id, type))
+
+        return self._call_result.ChangeAvailabilityPayload(
+            status=AvailabilityStatus.accepted
+        )
+
+    @on(Action.ChangeConfiguration)
+    def on_change_configuration(self, key, value):
+        logger.info("key %s, value %s" % (key, value))
+
+        return self._call_result.ChangeConfigurationPayload(
+            status=ConfigurationStatus.accepted
+        )
+
+    @on(Action.ClearCache)
+    def on_clear_cache(self, **kwargs):
+        logger.info("kwargs %s" % repr(kwargs))
+
+        return self._call_result.ClearCachePayload(
+            status=ClearCacheStatus.accepted
+        )
+
+    @on(Action.ClearChargingProfile)
+    def on_clear_charging_profile(self, **kwargs):
+        logger.info(
+            "id %s, connector_id %s, charging_profile_purpose %s, stack_level %s" % (
+                kwargs.get("id"), kwargs.get("connector_id"),
+                kwargs.get("charging_profile_purpose"), kwargs.get("stack_level")
+            )
+        )
+
+        return self._call_result.ClearChargingProfilePayload(
+            status=ClearChargingProfileStatus.accepted
+        )
+
+    @on(Action.DeleteCertificate)
+    def on_delete_certificate(self, certificate_hash_data):
+        logger.info("certificate_hash_data %s" % repr(certificate_hash_data))
+
+        return self._call_result.DeleteCertificatePayload(
+            status=DeleteCertificateStatus.accepted
+        )
+
+    @on(Action.ExtendedTriggerMessage)
+    def on_extended_trigger_message(self, requested_message, **kwargs):
+        logger.info("requested_message %s, connector_id %s" % (requested_message, kwargs.get("connector_id")))
+
+        return self._call_result.ExtendedTriggerMessagePayload(
+            status=TriggerMessageStatus.accepted
+        )
+
+    @on(Action.GetCompositeSchedule)
+    def on_get_composite_schedule(self, connector_id, duration, **kwargs):
+        logger.info(
+            "connector_id %s, duration %s, charging_rate_unit %s" % (
+                connector_id, duration, kwargs.get("charging_rate_unit")
+            )
+        )
+
+        return self._call_result.GetCompositeSchedulePayload(
+            status=GetCompositeScheduleStatus.accepted,
+            connector_id=connector_id,
+            schedule_start=utcnow(),
+            charging_schedule=ChargingSchedule(
+                charging_rate_unit=ChargingRateUnitType.watts,
+                charging_schedule_period=[
+                    ChargingSchedulePeriod(start_period=1, limit=2.2, number_phases=3),
+                    ChargingSchedulePeriod(start_period=1, limit=2.2, number_phases=3),
+                    ChargingSchedulePeriod(start_period=1, limit=2.2, number_phases=3)
+                ],
+                duration=duration,
+                start_schedule=utcnow(),
+                min_charging_rate=1.0,
+            ),
+        )
+
+    @on(Action.GetConfiguration)
+    def on_get_configuration(self, **kwargs):
+        logger.info("key %s" % kwargs.get("key"))
+
+        return self._call_result.GetConfigurationPayload(
+            configuration_key=[
+                KeyValue(key="Config1", readonly=True, value="Value1"),
+                KeyValue(key="Config2", readonly=False, value="Value2")
+            ],
+            unknown_key=["Config3"]
+        )
+
+    @on(Action.GetDiagnostics)
+    def on_get_diagnostics(self, location, **kwargs):
+        logger.info("location %s" % location)
+        logger.info("retries %s" % kwargs.get("retries"))
+        logger.info("retry_interval %s" % kwargs.get("retry_interval"))
+        logger.info("start_time %s" % kwargs.get("start_time"))
+        logger.info("stop_time %s" % kwargs.get("stop_time"))
+
+        return self._call_result.GetDiagnosticsPayload(
+            file_name="diagnostics file"
+        )
+
+    @on(Action.GetInstalledCertificateIds)
+    def on_get_installed_certificate_ids(self, certificate_type):
+        logger.info("certificate_type %s" % certificate_type)
+
+        return self._call_result.GetInstalledCertificateIdsPayload(
+            status=GetInstalledCertificateStatus.accepted,
+            certificate_hash_data=[
+                CertificateHashData(
+                    hash_algorithm=HashAlgorithm.sha256,
+                    issuer_name_hash="issuer_name_hash",
+                    issuer_key_hash="issuer_key_hash",
+                    serial_number="serial_number",
+                )
+            ]
+        )
+
+    @on(Action.GetLocalListVersion)
+    def on_get_local_list_version(self):
+        logger.info("on_get_local_list_version")
+
+        return self._call_result.GetLocalListVersionPayload(
+            list_version=123
+        )
+
+    @on(Action.GetLog)
+    def on_get_log(self, log, log_type, request_id, **kwargs):
+        logger.info("log %s" % str(log))
+        logger.info("log_type %s" % log_type)
+        logger.info("request_id %s" % request_id)
+        logger.info("retries %s" % kwargs.get("retries"))
+        logger.info("retry_interval %s" % kwargs.get("retry_interval"))
+
+        return self._call_result.GetLogPayload(
+            status=LogStatus.accepted,
+            filename="logfilename"
+        )
+
+    @on(Action.InstallCertificate)
+    def on_install_certificate(self, certificate_type, certificate):
+        logger.info("certificate_type %s" % certificate_type)
+        logger.info("certificate %s" % certificate)
+
+        return self._call_result.InstallCertificatePayload(
+            status=CertificateStatus.accepted,
+        )
+
+    @on(Action.RemoteStartTransaction)
+    def on_remote_start_transaction(self, id_tag, **kwargs):
+        logger.info("id_tag %s" % id_tag)
+        logger.info("connector_id %s" % kwargs.get("connector_id"))
+        logger.info("charging_profile %s" % kwargs.get("charging_profile"))
+
+        return self._call_result.RemoteStartTransactionPayload(
+            status=RemoteStartStopStatus.accepted,
+        )
+
+    @on(Action.RemoteStopTransaction)
+    def on_remote_stop_transaction(self, transaction_id):
+        logger.info("transaction_id %s" % transaction_id)
+
+        return self._call_result.RemoteStopTransactionPayload(
+            status=RemoteStartStopStatus.accepted,
+        )
+
+    @on(Action.ReserveNow)
+    def on_reserve_now(self, connector_id, expiry_date, id_tag, reservation_id, **kwargs):
+        logger.info("connector_id %s" % connector_id)
+        logger.info("expiry_date %s" % expiry_date)
+        logger.info("id_tag %s" % id_tag)
+        logger.info("reservation_id %s" % reservation_id)
+        logger.info("parent_id_tag %s" % kwargs.get("parent_id_tag"))
+
+        return self._call_result.ReserveNowPayload(
+            status=ReservationStatus.accepted,
+        )
+
+    @on(Action.Reset)
+    def on_reset(self, type):
+        logger.info("type %s" % type)
+
+        return self._call_result.ResetPayload(
+            status=ResetStatus.accepted,
+        )
+
+    @on(Action.SendLocalList)
+    def on_send_local_list(self, list_version, update_type, **kwargs):
+        logger.info("list_version %s" % list_version)
+        logger.info("update_type %s" % update_type)
+        logger.info("local_authorization_list %s" % kwargs.get("local_authorization_list"))
+
+        return self._call_result.SendLocalListPayload(
+            status=UpdateStatus.accepted,
+        )
+
+    @on(Action.SetChargingProfile)
+    def on_set_charging_profile(self, connector_id, cs_charging_profiles):
+        logger.info("connector_id %s" % connector_id)
+        logger.info("cs_charging_profiles %s" % cs_charging_profiles)
+
+        return self._call_result.SetChargingProfilePayload(
+            status=ChargingProfileStatus.accepted,
+        )
+
+    @on(Action.SignedUpdateFirmware)
+    def on_signed_update_firmware(self, request_id, firmware, **kwargs):
+        logger.info("request_id %s" % request_id)
+        logger.info("firmware %s" % firmware)
+        logger.info("retries %s" % kwargs.get("retries"))
+        logger.info("retry_interval %s" % kwargs.get("retry_interval"))
+
+        return self._call_result.SignedUpdateFirmwarePayload(
+            status=UpdateFirmwareStatus.accepted,
+        )
+
+    @on(Action.TriggerMessage)
+    def on_trigger_message(self, requested_message, **kwargs):
+        logger.info("requested_message %s" % requested_message)
+        logger.info("connector_id %s" % kwargs.get("connector_id"))
+
+        return self._call_result.TriggerMessagePayload(
+            status=TriggerMessageStatus.accepted,
+        )
+
+    @on(Action.UnlockConnector)
+    def on_unlock_connector(self, connector_id):
+        logger.info("connector_id %s" % connector_id)
+
+        return self._call_result.UnlockConnectorPayload(
+            status=UnlockStatus.unlocked,
+        )
+
+    @on(Action.UpdateFirmware)
+    def on_update_firmware(self, location, retrieve_date, **kwargs):
+        logger.info("location %s" % location)
+        logger.info("retrieve_date %s" % retrieve_date)
+        logger.info("retries %s" % kwargs.get("retries"))
+        logger.info("retry_interval %s" % kwargs.get("retry_interval"))
+
+        return self._call_result.UpdateFirmwarePayload()
+
+    @on(Action.DataTransfer)
+    def on_data_transfer(self, vendor_id, **kwargs):
+        logger.info("vendor_id %s" % vendor_id)
+        logger.info("message_id %s" % kwargs.get("message_id"))
+        logger.info("data %s" % kwargs.get("data"))
+
+        return self._call_result.DataTransferPayload(
+            status=DataTransferStatus.accepted,
+            data="data"
+        )
+
+
+def main():
+    logger.debug("_thread.get_heap_size() %s, gc.mem_alloc() %s" % (_thread.get_heap_size(), gc.mem_alloc()))
     ws = uwebsocket.Client.connect(
         "ws://106.15.58.32:31499/%s" % IMEI,
         # "ws://xxx.xxx.xxx.xxx:xxxx/868543063288971",
         headers={"Sec-WebSocket-Protocol": "ocpp1.6.0"},
         debug=False
     )
+    logger.debug("_thread.get_heap_size() %s, gc.mem_alloc() %s" % (_thread.get_heap_size(), gc.mem_alloc()))
     cp = ChargePoint(IMEI, ws)
+    logger.debug("_thread.get_heap_size() %s, gc.mem_alloc() %s" % (_thread.get_heap_size(), gc.mem_alloc()))
 
-    _thread.stack_size(0x2000)
+    _thread.stack_size(0x1000)
     tid = _thread.start_new_thread(cp.start, ())
+    logger.debug("cp start tid %s" % tid)
     utime.sleep_ms(200)
+    logger.debug("_thread.get_heap_size() %s, gc.mem_alloc() %s" % (_thread.get_heap_size(), gc.mem_alloc()))
 
     cp_send_fun = [i for i in dir(cp) if i.startswith("send_")]
-    # logger.debug("cp_send_fun %s" % repr(cp_send_fun))
+    logger.debug("cp_send_fun %s" % repr(cp_send_fun))
+    logger.debug("_thread.get_heap_size() %s, gc.mem_alloc() %s" % (_thread.get_heap_size(), gc.mem_alloc()))
     for name in cp_send_fun:
         getattr(cp, name)()
+        logger.debug("_thread.get_heap_size() %s, gc.mem_alloc() %s" % (_thread.get_heap_size(), gc.mem_alloc()))
         utime.sleep_ms(100)
         break
+
+
+if __name__ == "__main__":
+    main()

@@ -57,4 +57,4 @@ class UUID:
 
 
 def uuid4():
-    return UUID(bytes=bytes([urandom.randint(0, 0xFF) for i in range(16)]), version=4)
+    return UUID(bytes=bytes([urandom.getrandbits(8) for _ in range(16)]), version=4)

@@ -12,8 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-""" Module containing classes that model the several OCPP messages types. It
-also contain some helper functions for packing and unpacking messages.  """
+"""
+@file      : messages.py
+@author    : Jack Sun (jack.sun@quectel.com)
+@brief     : <Description>
+@version   : v1.0.0
+@date      : 2024-04-23 15:57:26
+@copyright : Copyright (c) 2024
+"""
 
 import ujson
 
@@ -30,6 +36,9 @@ from usr.ocpp.exceptions import (
     ValidationError,
     SchemaValidationError,
 )
+
+""" Module containing classes that model the several OCPP messages types. It
+also contain some helper functions for packing and unpacking messages.  """
 
 
 class MessageType:

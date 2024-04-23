@@ -26,8 +26,9 @@ import utime
 import _thread
 
 from usr.tools import uwebsocket, logging
-from usr.ocpp.v16 import call
+from usr.ocpp.routing import on
 from usr.ocpp.v16 import ChargePoint as cp
+from usr.ocpp.v16.enums import RegistrationStatus, Action
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +38,7 @@ IMEI = modem.getDevImei()
 class ChargePoint(cp):
 
     def send_boot_notification(self):
-        request = call.BootNotificationPayload(
+        request = self._call.BootNotificationPayload(
             charge_point_model="ICU Eve Mini",
             charge_point_vendor="Alfen BV",
             firmware_version="#1:3.4.0-2990#N:217H;1.0-223"
@@ -47,6 +48,14 @@ class ChargePoint(cp):
 
         if response.status == RegistrationStatus.accepted:
             logger.info("Connected to central system.")
+
+    @on(Action.CancelReservation)
+    def on_cancel_reservation(self, reservation_id):
+        logger.info("reservation_id %s" % (reservation_id))
+
+        return self._call_result.CancelReservationPayload(
+            status=CancelReservationStatus.accepted
+        )
 
 
 if __name__ == "__main__":
@@ -84,6 +93,7 @@ if __name__ == "__main__":
         |-- dataclasses.py
         |-- exceptions.py
         |-- messages.py
+        |-- routing.py
     |-- tools
         |-- logging.py
         |-- uuid.py
