@@ -130,7 +130,7 @@ if __name__ == "__main__":
 
 > If you have your own OCPP server, you can skip this instruction.
 
-#### 1. Install environment
+#### 1. Install environments
 
 1. Operating System: Window or Linux.
 
@@ -163,7 +163,7 @@ INFO:websockets.server:server listening on 0.0.0.0:31499
 INFO:root:WebSocket Server Started
 ```
 
-### Running OCPP Clinet.
+### Running OCPP Client.
 
 #### 1. Running environment
 
