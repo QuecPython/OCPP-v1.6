@@ -209,7 +209,7 @@ if __name__ == "__main__":
 
 ## 用法
 
-- [API 参考手册](./docs/en/API_Reference.md)
+- [API 参考手册](./docs/zh/API参考手册.md)
 - [客户端示例代码](./code/v16_client_qpy_demo.py)
 - [服务端示例代码](./demo/v16_server_demo.py)
 

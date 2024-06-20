@@ -1,9 +1,9 @@
-# OCPP v1.6 版本请求与应答消息数据结构说明
+# OCPP v1.6 Version Request and Response Message Data Structure Description
 
-- OCPP v1.6 版本的相关数据模块在 `ocpp.v16` 路径下
-- 所有消息数据结构都抽象为对应消息名称的类，类实例化的参数即为消息体中需要包含的参数，实例化对应的请求消息类对象或应答消息类对象即可
+- The relevant data module of OCPP v1.6 version is under the path `ocpp.v16`
+- All message data structures are abstracted into classes corresponding to the message names. The parameters for class instantiation are the parameters that need to be included in the message body. Just instantiate the corresponding request message class object or response message class object.
 
-**示例：**
+**Example:**
 
 ```python
 call.CancelReservationPayload(
@@ -15,840 +15,840 @@ call_result.CancelReservationPayload(
 )
 ```
 
-## <span id="request-message-structure">请求消息结构体</span>
+## <span id="request-message-structure">Request Message Structure<span>
 
-- 请求消息结构体文件为 `ocpp.v16.call`。
+- The request message structure file is `ocpp.v16.call`.
 
-### 服务端请求消息结构体
+### Server Request Message Structure
 
-- 对应客户端接收消息结构体。
+- Corresponding to the client receiving message structure.
 
 #### `call.CancelReservationPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|reservation_id|int||是|
+|reservation_id|int||Yes|
 
 #### `call.CertificateSignedPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|certificate_chain|str|最大长度：10000|是|
+|certificate_chain|str|The maximum length: 10000|Yes|
 
 #### `call.ChangeAvailabilityPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|connector_id|int||是|
-|type|str|[`AvailabilityType`](#enums-availabilitytype "AvailabilityType 枚举值")|是|
+|connector_id|int||Yes|
+|type|str|[`AvailabilityType`](#enums-availabilitytype "AvailabilityType Enumeration Value")|Yes|
 
 #### `call.ChangeConfigurationPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|key|str|最大长度：50|是|
-|value|str|最大长度：500|是|
+|key|str|The maximum length: 50|Yes|
+|value|str|The maximum length: 500|Yes|
 
 #### `call.ClearCachePayload`
 
-**参数说明：**
+**Parameter Description:**
 
-- 无
+- No Parameters
 
 #### `call.ClearChargingProfilePayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|id|int||否|
-|connector_id|int||否|
-|charging_profile_purpose|str|[`ChargingProfilePurposeType`](#enums-chargingprofilepurposetype "ChargingProfilePurposeType 枚举值")|否|
-|stack_level|int||否|
+|id|int||No|
+|connector_id|int||No|
+|charging_profile_purpose|str|[`ChargingProfilePurposeType`](#enums-chargingprofilepurposetype "ChargingProfilePurposeType Enumeration Value")|No|
+|stack_level|int||No|
 
 #### `call.DeleteCertificatePayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|certificate_hash_data|obj|[`CertificateHashData`](#datatypes-certificatehashdata "CertificateHashData 结构数据")|是|
+|certificate_hash_data|obj|[`CertificateHashData`](#datatypes-certificatehashdata "CertificateHashData Structured Data")|Yes|
 
 #### `call.ExtendedTriggerMessagePayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|requested_message|str|[`MessageTrigger`](#enums-messagetrigger "MessageTrigger 枚举值")|是|
-|connector_id|int||否|
+|requested_message|str|[`MessageTrigger`](#enums-messagetrigger "MessageTrigger Enumeration Value")|Yes|
+|connector_id|int||No|
 
 #### `call.GetCompositeSchedulePayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|connector_id|int||是|
-|duration|int||是|
-|charging_rate_unit|str|[`ChargingRateUnitType`](#enums-chargingrateunittype "ChargingRateUnitType 枚举值")|是|
+|connector_id|int||Yes|
+|duration|int||Yes|
+|charging_rate_unit|str|[`ChargingRateUnitType`](#enums-chargingrateunittype "ChargingRateUnitType Enumeration Value")|Yes|
 
 #### `call.GetConfigurationPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|key|list|列表元素 `str`，单个字符串最大长度：50|否|
+|key|list|List element `str`, Maximum length of a single string: 50|No|
 
 #### `call.GetDiagnosticsPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|location|str|uri 数据|是|
-|retries|int||否|
-|retry_interval|int||否|
-|start_time|str|UTC 时间（YYYY-MM-DDTHH:mm:SS.000000）|否|
-|stop_time|str|UTC 时间（YYYY-MM-DDTHH:mm:SS.000000）|否|
+|location|str|uri|Yes|
+|retries|int||No|
+|retry_interval|int||No|
+|start_time|str|UTC time (YYYY-MM-DDTHH:mm:SS.000000)|No|
+|stop_time|str|UTC time (YYYY-MM-DDTHH:mm:SS.000000)|No|
 
 #### `call.GetInstalledCertificateIdsPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|certificate_type|str|[`CertificateUse`](#enums-certificateuse "CertificateUse 枚举值")|是|
+|certificate_type|str|[`CertificateUse`](#enums-certificateuse "CertificateUse Enumeration Value")|Yes|
 
 #### `call.GetLocalListVersionPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-- 无
+- No Parameters
 
 #### `call.GetLogPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|log|obj|[`LogParameters`](#datatypes-logparameters "LogParameters 结构数据")|是|
-|log_type|str|[`Log`](#enums-log "Log 枚举值")|是|
-|request_id|int||是|
-|retries|int||否|
-|retry_interval|int||否|
+|log|obj|[`LogParameters`](#datatypes-logparameters "LogParameters Structured Data")|Yes|
+|log_type|str|[`Log`](#enums-log "Log Enumeration Value")|Yes|
+|request_id|int||Yes|
+|retries|int||No|
+|retry_interval|int||No|
 
 #### `call.InstallCertificatePayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|certificate_type|str|[`CertificateUse`](#enums-certificateuse "CertificateUse 枚举值")|是|
-|certificate|str|最大长度：5500|是|
+|certificate_type|str|[`CertificateUse`](#enums-certificateuse "CertificateUse Enumeration Value")|Yes|
+|certificate|str|The maximum length: 5500|Yes|
 
 #### `call.RemoteStartTransactionPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|id_tag|str|最大长度：20|是|
-|connector_id|int||否|
-|charging_profile|obj|[`ChargingProfile`](#datatypes-chargingprofile "ChargingProfile 结构数据")|否|
+|id_tag|str|The maximum length: 20|Yes|
+|connector_id|int||No|
+|charging_profile|obj|[`ChargingProfile`](#datatypes-chargingprofile "ChargingProfile Structured Data")|No|
 
 #### `call.RemoteStopTransactionPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|transaction_id|int||是|
+|transaction_id|int||Yes|
 
 #### `call.ReserveNowPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|connector_id|int||是|
-|expiry_date|str|UTC 时间（YYYY-MM-DDTHH:mm:SS.000000）|是|
-|id_tag|str|最大长度：20|是|
-|reservation_id|int||是|
-|parent_id_tag|str|最大长度：20|否|
+|connector_id|int||Yes|
+|expiry_date|str|UTC time (YYYY-MM-DDTHH:mm:SS.000000)|Yes|
+|id_tag|str|The maximum length: 20|Yes|
+|reservation_id|int||Yes|
+|parent_id_tag|str|The maximum length: 20|No|
 
 #### `call.ResetPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|type|str|[`ResetType`](#enums-resettype "ResetType 枚举值")|是|
+|type|str|[`ResetType`](#enums-resettype "ResetType Enumeration Value")|Yes|
 
 #### `call.SendLocalListPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|list_version|int||是|
-|update_type|str|[`UpdateType`](#enums-updatetype "UpdateType 枚举值")|是|
-|local_authorization_list|list|列表元素 [`AuthorizationData`](#datatypes-authorizationdata "AuthorizationData 结构数据")|否|
+|list_version|int||Yes|
+|update_type|str|[`UpdateType`](#enums-updatetype "UpdateType Enumeration Value")|Yes|
+|local_authorization_list|list|List element is [`AuthorizationData`](#datatypes-authorizationdata "AuthorizationData Structured Data")|No|
 
 #### `call.SetChargingProfilePayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|connector_id|int||是|
-|cs_charging_profiles|obj|[`ChargingProfile`](#datatypes-chargingprofile "ChargingProfile 结构数据")|是|
+|connector_id|int||Yes|
+|cs_charging_profiles|obj|[`ChargingProfile`](#datatypes-chargingprofile "ChargingProfile Structured Data")|Yes|
 
 #### `call.SignedUpdateFirmwarePayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|request_id|int||是|
-|firmware|obj|[`Firmware`](#datatypes-firmware "Firmware 结构数据")|是|
-|retries|int||否|
-|retry_interval|int||否|
+|request_id|int||Yes|
+|firmware|obj|[`Firmware`](#datatypes-firmware "Firmware Structured Data")|Yes|
+|retries|int||No|
+|retry_interval|int||No|
 
 #### `call.TriggerMessagePayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|requested_message|str|[`MessageTrigger`](#enums-messagetrigger "MessageTrigger 枚举值")|是|
-|connector_id|int||否|
+|requested_message|str|[`MessageTrigger`](#enums-messagetrigger "MessageTrigger Enumeration Value")|Yes|
+|connector_id|int||No|
 
 #### `call.UnlockConnectorPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|connector_id|int||是|
+|connector_id|int||Yes|
 
 #### `call.UpdateFirmwarePayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|location|str|uri 数据|是|
-|retrieve_date|str|UTC 时间（YYYY-MM-DDTHH:mm:SS.000000）|是|
-|retries|int||否|
-|retry_interval|int||否|
+|location|str|uri|Yes|
+|retrieve_date|str|UTC time (YYYY-MM-DDTHH:mm:SS.000000)|Yes|
+|retries|int||No|
+|retry_interval|int||No|
 
-### 客户端请求消息结构体
+### Client Request Message Structure
 
-- 对应服务端接收消息结构体。
+- Corresponding to the message structure received by the server.
 
 #### `call.AuthorizePayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|id_tag|str|最大长度：20|是|
+|id_tag|str|The maximum length: 20|Yes|
 
 #### `call.BootNotificationPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|charge_point_model|str|最大长度：20|是|
-|charge_point_vendor|str|最大长度：20|是|
-|charge_box_serial_number|str|最大长度：25|否|
-|charge_point_serial_number|str|最大长度：25|否|
-|firmware_version|str|最大长度：50|否|
-|iccid|str|最大长度：20|否|
-|imsi|str|最大长度：20|否|
-|meter_serial_number|str|最大长度：25|否|
-|meter_type|str|最大长度：25|否|
+|charge_point_model|str|The maximum length: 20|Yes|
+|charge_point_vendor|str|The maximum length: 20|Yes|
+|charge_box_serial_number|str|The maximum length: 25|No|
+|charge_point_serial_number|str|The maximum length: 25|No|
+|firmware_version|str|The maximum length: 50|No|
+|iccid|str|The maximum length: 20|No|
+|imsi|str|The maximum length: 20|No|
+|meter_serial_number|str|The maximum length: 25|No|
+|meter_type|str|The maximum length: 25|No|
 
 #### `call.DiagnosticsStatusNotificationPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|status|str|[`DiagnosticsStatus`](#enums-diagnosticsstatus "DiagnosticsStatus 枚举值")|是|
+|status|str|[`DiagnosticsStatus`](#enums-diagnosticsstatus "DiagnosticsStatus Enumeration Value")|Yes|
 
 #### `call.FirmwareStatusNotificationPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|status|str|[`FirmwareStatus`](#enums-firmwarestatus "FirmwareStatus 枚举值")|是|
+|status|str|[`FirmwareStatus`](#enums-firmwarestatus "FirmwareStatus Enumeration Value")|Yes|
 
 #### `call.HeartbeatPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-- 无
+- No Parameters
 
 #### `call.LogStatusNotificationPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|status|str|[`UploadLogStatus`](#enums-uploadlogstatus "UploadLogStatus 枚举值")|是|
-|request_id|int||是|
+|status|str|[`UploadLogStatus`](#enums-uploadlogstatus "UploadLogStatus Enumeration Value")|Yes|
+|request_id|int||Yes|
 
 #### `call.MeterValuesPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|connector_id|int||是|
-|meter_value|list|列表元素 [`MeterValue`](#datatypes-metervalue "MeterValue 结构数据")|是|
-|transaction_id|int||否|
+|connector_id|int||Yes|
+|meter_value|list|List element is [`MeterValue`](#datatypes-metervalue "MeterValue Structured Data")|Yes|
+|transaction_id|int||No|
 
 #### `call.SecurityEventNotificationPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|type|str|最大长度：50|是|
-|timestamp|str|UTC 时间（YYYY-MM-DDTHH:mm:SS.000000）|是|
-|tech_info|str|最大长度：255|否|
+|type|str|The maximum length: 50|Yes|
+|timestamp|str|UTC time (YYYY-MM-DDTHH:mm:SS.000000)|Yes|
+|tech_info|str|The maximum length: 255|No|
 
 #### `call.SignCertificatePayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|csr|str|最大长度：5500|是|
+|csr|str|The maximum length: 5500|Yes|
 
 #### `call.SignedFirmwareStatusNotificationPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|status|str|[`FirmwareStatus`](#enums-firmwarestatus "FirmwareStatus 枚举值")|是|
-|request_id|int||是|
+|status|str|[`FirmwareStatus`](#enums-firmwarestatus "FirmwareStatus Enumeration Value")|Yes|
+|request_id|int||Yes|
 
 #### `call.StartTransactionPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|connector_id|int||是|
-|id_tag|str|最大长度：20|是|
-|meter_start|int||是|
-|timestamp|str|UTC 时间（YYYY-MM-DDTHH:mm:SS.000000）|是|
-|reservation_id|int||否|
+|connector_id|int||Yes|
+|id_tag|str|The maximum length: 20|Yes|
+|meter_start|int||Yes|
+|timestamp|str|UTC time (YYYY-MM-DDTHH:mm:SS.000000)|Yes|
+|reservation_id|int||No|
 
 #### `call.StopTransactionPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|meter_stop|int||是|
-|timestamp|str|UTC 时间（YYYY-MM-DDTHH:mm:SS.000000）|是|
-|transaction_id|int||是|
-|reason|str|[`Reason`](#enums-reason "Reason 枚举值")|否|
-|id_tag|str|最大长度：20|否|
-|transaction_data|list|列表元素 [`MeterValue`](#datatypes-metervalue "MeterValue 结构数据")|否|
+|meter_stop|int||Yes|
+|timestamp|str|UTC time (YYYY-MM-DDTHH:mm:SS.000000)|Yes|
+|transaction_id|int||Yes|
+|reason|str|[`Reason`](#enums-reason "Reason Enumeration Value")|No|
+|id_tag|str|The maximum length: 20|No|
+|transaction_data|list|List element is [`MeterValue`](#datatypes-metervalue "MeterValue Structured Data")|No|
 
 #### `call.StatusNotificationPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|connector_id|int||是|
-|error_code|str|[`ChargePointErrorCode`](#enums-chargepointerrorcode "ChargePointErrorCode 枚举值")|是|
-|status|str|[`ChargePointStatus`](#enums-chargepointstatus "ChargePointStatus 枚举值")|是|
-|timestamp|str|UTC 时间（YYYY-MM-DDTHH:mm:SS.000000）|是|
-|info|str|最大长度：50|否|
-|vendor_id|str|最大长度：255|否|
-|vendor_error_code|str|最大长度：50|否|
+|connector_id|int||Yes|
+|error_code|str|[`ChargePointErrorCode`](#enums-chargepointerrorcode "ChargePointErrorCode Enumeration Value")|Yes|
+|status|str|[`ChargePointStatus`](#enums-chargepointstatus "ChargePointStatus Enumeration Value")|Yes|
+|timestamp|str|UTC time (YYYY-MM-DDTHH:mm:SS.000000)|Yes|
+|info|str|The maximum length: 50|No|
+|vendor_id|str|The maximum length: 255|No|
+|vendor_error_code|str|The maximum length: 50|No|
 
-### 服务器和客户端都可进行请求的消息结构体
+### A Message Structure That Both The Server and The Client Can Request
 
 #### `call.DataTransferPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|vendor_id|str|最大长度：255|是|
-|message_id|str|最大长度：50|否|
-|data|str||否|
+|vendor_id|str|The maximum length: 255|Yes|
+|message_id|str|The maximum length: 50|No|
+|data|str||No|
 
-## <span id="response-message-structure">应答消息结构体</span>
+## <span id="response-message-structure">Response Message Structure</span>
 
-- 应答消息结构体文件为 `ocpp.v16.call_result`。
+- The response message structure file is `ocpp.v16.call_result`.
 
-### 服务端应答客户端请求消息结构体
+### Server Response Client Request Message Structure
 
 #### `call_result.AuthorizePayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|id_tag_info|obj|[`IdTagInfo`](#datatypes-idtaginfo "IdTagInfo 结构数据")|是|
+|id_tag_info|obj|[`IdTagInfo`](#datatypes-idtaginfo "IdTagInfo Structured Data")|Yes|
 
 #### `call_result.BootNotificationPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|current_time|str|UTC 时间（YYYY-MM-DDTHH:mm:SS.000000）|是|
-|interval|int||是|
-|status|str|[`RegistrationStatus`](#enums-registrationstatus "RegistrationStatus 枚举值")|是|
+|current_time|str|UTC time (YYYY-MM-DDTHH:mm:SS.000000)|Yes|
+|interval|int||Yes|
+|status|str|[`RegistrationStatus`](#enums-registrationstatus "RegistrationStatus Enumeration Value")|Yes|
 
 #### `call_result.DiagnosticsStatusNotificationPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-- 无
+- No Parameters
 
 #### `call_result.FirmwareStatusNotificationPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-- 无
+- No Parameters
 
 #### `call_result.HeartbeatPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|current_time|str|UTC 时间（YYYY-MM-DDTHH:mm:SS.000000）|是|
+|current_time|str|UTC time (YYYY-MM-DDTHH:mm:SS.000000)|Yes|
 
 #### `call_result.LogStatusNotificationPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-- 无
+- No Parameters
 
 #### `call_result.SecurityEventNotificationPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-- 无
+- No Parameters
 
 #### `call_result.SignCertificatePayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|status|str|[`GenericStatus`](#enums-genericstatus "GenericStatus 枚举值")|是|
+|status|str|[`GenericStatus`](#enums-genericstatus "GenericStatus Enumeration Value")|Yes|
 
 #### `call_result.MeterValuesPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-- 无
+- No Parameters
 
 #### `call_result.StartTransactionPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|transaction_id|int||是|
-|id_tag_info|obj|[`IdTagInfo`](#datatypes-idtaginfo "IdTagInfo 结构数据")|是|
+|transaction_id|int||Yes|
+|id_tag_info|obj|[`IdTagInfo`](#datatypes-idtaginfo "IdTagInfo Structured Data")|Yes|
 
 #### `call_result.StatusNotificationPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-- 无
+- No Parameters
 
 #### `call_result.StopTransactionPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|id_tag_info|obj|[`IdTagInfo`](#datatypes-idtaginfo "IdTagInfo 结构数据")|是|
+|id_tag_info|obj|[`IdTagInfo`](#datatypes-idtaginfo "IdTagInfo Structured Data")|Yes|
 
-### 客户端应答服务端请求消息结构体
+### Client Response Server Sequest Message Structure
 
 #### `call_result.CancelReservationPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|status|str|[`CancelReservationStatus`](#enums-cancelreservationstatus "CancelReservationStatus 枚举值")|是|
+|status|str|[`CancelReservationStatus`](#enums-cancelreservationstatus "CancelReservationStatus Enumeration Value")|Yes|
 
 #### `call_result.CertificateSignedPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|status|str|[`CertificateSignedStatus`](#enums-certificatesignedstatus "CertificateSignedStatus 枚举值")|是|
+|status|str|[`CertificateSignedStatus`](#enums-certificatesignedstatus "CertificateSignedStatus Enumeration Value")|Yes|
 
 #### `call_result.ChangeAvailabilityPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|status|str|[`AvailabilityStatus`](#enums-availabilitystatus "AvailabilityStatus 枚举值")|是|
+|status|str|[`AvailabilityStatus`](#enums-availabilitystatus "AvailabilityStatus Enumeration Value")|Yes|
 
 #### `call_result.ChangeConfigurationPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|status|str|[`ConfigurationStatus`](#enums-configurationstatus "ConfigurationStatus 枚举值")|是|
+|status|str|[`ConfigurationStatus`](#enums-configurationstatus "ConfigurationStatus Enumeration Value")|Yes|
 
 #### `call_result.ClearCachePayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|status|str|[`ClearCacheStatus`](#enums-clearcachestatus "ClearCacheStatus 枚举值")|是|
+|status|str|[`ClearCacheStatus`](#enums-clearcachestatus "ClearCacheStatus Enumeration Value")|Yes|
 
 #### `call_result.ClearChargingProfilePayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|status|str|[`ClearChargingProfileStatus`](#enums-clearchargingprofilestatus "ClearChargingProfileStatus 枚举值")|是|
+|status|str|[`ClearChargingProfileStatus`](#enums-clearchargingprofilestatus "ClearChargingProfileStatus Enumeration Value")|Yes|
 
 #### `call_result.DeleteCertificatePayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|status|str|[`DeleteCertificateStatus`](#enums-deletecertificatestatus "DeleteCertificateStatus 枚举值")|是|
+|status|str|[`DeleteCertificateStatus`](#enums-deletecertificatestatus "DeleteCertificateStatus Enumeration Value")|Yes|
 
 #### `call_result.ExtendedTriggerMessagePayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|status|str|[`TriggerMessageStatus`](#enums-triggermessagestatus "TriggerMessageStatus 枚举值")|是|
+|status|str|[`TriggerMessageStatus`](#enums-triggermessagestatus "TriggerMessageStatus Enumeration Value")|Yes|
 
 #### `call_result.GetInstalledCertificateIdsPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|status|str|[`GetInstalledCertificateStatus`](#enums-getinstalledcertificatestatus "GetInstalledCertificateStatus 枚举值")|是|
-|certificate_hash_data|list|列表元素 [`CertificateHashData`](#datatypes-certificatehashdata "CertificateHashData 数据结构")|否|
+|status|str|[`GetInstalledCertificateStatus`](#enums-getinstalledcertificatestatus "GetInstalledCertificateStatus Enumeration Value")|Yes|
+|certificate_hash_data|list|List element is [`CertificateHashData`](#datatypes-certificatehashdata "CertificateHashData Structured Data")|No|
 
 #### `call_result.GetCompositeSchedulePayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|status|str|[`GetCompositeScheduleStatus`](#enums-getcompositeschedulestatus "GetCompositeScheduleStatus 枚举值")|是|
-|connector_id|int||否|
-|schedule_start|str|UTC 时间（YYYY-MM-DDTHH:mm:SS.000000）|否|
-|charging_schedule|obj|[`ChargingSchedule`](#datatypes-chargingschedule "ChargingSchedule 结构数据")|否|
+|status|str|[`GetCompositeScheduleStatus`](#enums-getcompositeschedulestatus "GetCompositeScheduleStatus Enumeration Value")|Yes|
+|connector_id|int||No|
+|schedule_start|str|UTC time (YYYY-MM-DDTHH:mm:SS.000000)|No|
+|charging_schedule|obj|[`ChargingSchedule`](#datatypes-chargingschedule "ChargingSchedule Structured Data")|No|
 
 #### `call_result.GetConfigurationPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|configuration_key|list|列表元素 [`KeyValue`](#datatypes-keyvalue "KeyValue 结构数据")|否|
-|unknown_key|list|列表元素 `str`，单个字符串最大长度：50|否|
+|configuration_key|list|List element is [`KeyValue`](#datatypes-keyvalue "KeyValue Structured Data")|No|
+|unknown_key|list|List element `str`, Maximum length of a single string: 50|No|
 
 #### `call_result.GetDiagnosticsPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|file_name|str|最大长度：255|否|
+|file_name|str|The maximum length: 255|No|
 
 #### `call_result.GetLocalListVersionPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|list_version|int||是|
+|list_version|int||Yes|
 
 #### `call_result.GetLogPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|status|str|[`LogStatus`](#enums-logstatus "LogStatus 枚举值")|是|
-|file_name|str|最大长度：255|否|
+|status|str|[`LogStatus`](#enums-logstatus "LogStatus Enumeration Value")|Yes|
+|file_name|str|The maximum length: 255|No|
 
 #### `call_result.InstallCertificatePayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|status|str|[`CertificateStatus`](#enums-certificatestatus "CertificateStatus 枚举值")|是|
+|status|str|[`CertificateStatus`](#enums-certificatestatus "CertificateStatus Enumeration Value")|Yes|
 
 #### `call_result.RemoteStartTransactionPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|status|str|[`RemoteStartStopStatus`](#enums-remotestartstopstatus "RemoteStartStopStatus 枚举值")|是|
+|status|str|[`RemoteStartStopStatus`](#enums-remotestartstopstatus "RemoteStartStopStatus Enumeration Value")|Yes|
 
 #### `call_result.RemoteStopTransactionPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|status|str|[`RemoteStartStopStatus`](#enums-remotestartstopstatus "RemoteStartStopStatus 枚举值")|是|
+|status|str|[`RemoteStartStopStatus`](#enums-remotestartstopstatus "RemoteStartStopStatus Enumeration Value")|Yes|
 
 #### `call_result.ReserveNowPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|status|str|[`ReservationStatus`](#enums-reservationstatus "ReservationStatus 枚举值")|是|
+|status|str|[`ReservationStatus`](#enums-reservationstatus "ReservationStatus Enumeration Value")|Yes|
 
 #### `call_result.ResetPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|status|str|[`ResetStatus`](#enums-resetstatus "ResetStatus 枚举值")|是|
+|status|str|[`ResetStatus`](#enums-resetstatus "ResetStatus Enumeration Value")|Yes|
 
 #### `call_result.SendLocalListPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|status|str|[`UpdateStatus`](#enums-updatestatus "UpdateStatus 枚举值")|是|
+|status|str|[`UpdateStatus`](#enums-updatestatus "UpdateStatus Enumeration Value")|Yes|
 
 #### `call_result.SetChargingProfilePayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|status|str|[`ChargingProfileStatus`](#enums-chargingprofilestatus "ChargingProfileStatus 枚举值")|是|
+|status|str|[`ChargingProfileStatus`](#enums-chargingprofilestatus "ChargingProfileStatus Enumeration Value")|Yes|
 
 #### `call_result.SignedFirmwareStatusNotificationPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-- 无
+- No Parameters
 
 #### `call_result.SignedUpdateFirmwarePayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|status|str|[`UpdateFirmwareStatus`](#enums-updatefirmwarestatus "UpdateFirmwareStatus 枚举值")|是|
+|status|str|[`UpdateFirmwareStatus`](#enums-updatefirmwarestatus "UpdateFirmwareStatus Enumeration Value")|Yes|
 
 #### `call_result.TriggerMessagePayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|status|str|[`TriggerMessageStatus`](#enums-triggermessagestatus "TriggerMessageStatus 枚举值")|是|
+|status|str|[`TriggerMessageStatus`](#enums-triggermessagestatus "TriggerMessageStatus Enumeration Value")|Yes|
 
 #### `call_result.UnlockConnectorPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|status|str|[`UnlockStatus`](#enums-unlockstatus "UnlockStatus 枚举值")|是|
+|status|str|[`UnlockStatus`](#enums-unlockstatus "UnlockStatus Enumeration Value")|Yes|
 
 #### `call_result.UpdateFirmwarePayload`
 
-**参数说明：**
+**Parameter Description:**
 
-- 无
+- No Parameters
 
-### 服务器和客户端都可进行请求的应答消息结构体
+### A Response Message Structure That Both The Server and The Client Can Request
 
 #### `call_result.DataTransferPayload`
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|status|str|[`DataTransferStatus`](#enums-datatransferstatus "DataTransferStatus 枚举值")|是|
-|data|str||否|
+|status|str|[`DataTransferStatus`](#enums-datatransferstatus "DataTransferStatus Enumeration Value")|Yes|
+|data|str||No|
 
-## 消息体中的数据结构
+## Data Structure In Message Body
 
-- 其他数据结构对应文件 `ocpp.v16.datatypes`。
+- Other data structure corresponding files `ocpp.v16.datatypes`
 
 ### <span id="datatypes-idtaginfo">`datatypes.IdTagInfo`</span>
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|status|str|[`AuthorizationStatus`](#enums-authorizationstatus "AuthorizationStatus 枚举值")|是|
-|parent_id_tag|str|最大长度：20|否|
-|expiry_date|str|UTC 时间（YYYY-MM-DDTHH:mm:SS.000000）|否|
+|status|str|[`AuthorizationStatus`](#enums-authorizationstatus "AuthorizationStatus Enumeration Value")|Yes|
+|parent_id_tag|str|The maximum length: 20|No|
+|expiry_date|str|UTC time (YYYY-MM-DDTHH:mm:SS.000000)|No|
 
 ### <span id="datatypes-authorizationdata">`datatypes.AuthorizationData`</span>
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|id_tag|str||是|
-|id_tag_info|obj|[`IdTagInfo`](#datatypes-idtaginfo "IdTagInfo 结构数据")|否|
+|id_tag|str||Yes|
+|id_tag_info|obj|[`IdTagInfo`](#datatypes-idtaginfo "IdTagInfo Structured Data")|No|
 
 ### <span id="datatypes-chargingscheduleperiod">`datatypes.ChargingSchedulePeriod`</span>
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|start_period|int||是|
-|limit|float||是|
-|number_phases|int||否|
+|start_period|int||Yes|
+|limit|float||Yes|
+|number_phases|int||No|
 
 ### <span id="datatypes-chargingschedule">`datatypes.ChargingSchedule`</span>
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|charging_rate_unit|str|[`ChargingRateUnitType`](#enums-chargingrateunittype "ChargingRateUnitType 枚举值")|是|
-|charging_schedule_period|list|列表元素 [`ChargingSchedulePeriod`](#datatypes-chargingscheduleperiod "ChargingSchedulePeriod 结构数据")|是|
-|duration|int||否|
-|start_schedule|str|UTC 时间（YYYY-MM-DDTHH:mm:SS.000000）|否|
-|min_charging_rate|float||否|
+|charging_rate_unit|str|[`ChargingRateUnitType`](#enums-chargingrateunittype "ChargingRateUnitType Enumeration Value")|Yes|
+|charging_schedule_period|list|List element is [`ChargingSchedulePeriod`](#datatypes-chargingscheduleperiod "ChargingSchedulePeriod Structured Data")|Yes|
+|duration|int||No|
+|start_schedule|str|UTC time (YYYY-MM-DDTHH:mm:SS.000000)|No|
+|min_charging_rate|float||No|
 
 ### <span id="datatypes-chargingprofile">`datatypes.ChargingProfile`</span>
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|charging_profile_id|int||是|
-|stack_level|int||是|
-|charging_profile_purpose|obj|[`ChargingProfilePurposeType`](#enums-chargingprofilepurposetype "ChargingProfilePurposeType 枚举值")|是|
-|charging_profile_kind|obj|[`ChargingProfileKindType`](#enums-chargingprofilekindtype "ChargingProfileKindType 枚举值")|是|
-|charging_schedule|obj|[`ChargingSchedule`](#datatypes-chargingschedule "ChargingSchedule 结构数据")|是|
-|transaction_id|int||否|
-|recurrency_kind|str|[`RecurrencyKind`](#enums-recurrencykind "RecurrencyKind 枚举值")|否|
-|valid_from|str|UTC 时间（YYYY-MM-DDTHH:mm:SS.000000）|否|
-|valid_to|str|UTC 时间（YYYY-MM-DDTHH:mm:SS.000000）|否|
+|charging_profile_id|int||Yes|
+|stack_level|int||Yes|
+|charging_profile_purpose|obj|[`ChargingProfilePurposeType`](#enums-chargingprofilepurposetype "ChargingProfilePurposeType Enumeration Value")|Yes|
+|charging_profile_kind|obj|[`ChargingProfileKindType`](#enums-chargingprofilekindtype "ChargingProfileKindType Enumeration Value")|Yes|
+|charging_schedule|obj|[`ChargingSchedule`](#datatypes-chargingschedule "ChargingSchedule Structured Data")|Yes|
+|transaction_id|int||No|
+|recurrency_kind|str|[`RecurrencyKind`](#enums-recurrencykind "RecurrencyKind Enumeration Value")|No|
+|valid_from|str|UTC time (YYYY-MM-DDTHH:mm:SS.000000)|No|
+|valid_to|str|UTC time (YYYY-MM-DDTHH:mm:SS.000000)|No|
 
 ### <span id="datatypes-keyvalue">`datatypes.KeyValue`</span>
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|key|str||是|
-|readonly|bool||是|
-|value|str||否|
+|key|str||Yes|
+|readonly|bool||Yes|
+|value|str||No|
 
 ### <span id="datatypes-sampledvalue">`datatypes.SampledValue`</span>
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|value|str||是|
-|context|str|[`ReadingContext`](#enums-readingcontext "ReadingContext 枚举值")|否|
-|format|str|[`ValueFormat`](#enums-valueformat "ValueFormat 枚举值")|否|
-|measurand|str|[`Measurand`](#enums-measurand "Measurand 枚举值")|否|
-|phase|str|[`Phase`](#enums-phase "Phase 枚举值")|否|
-|location|str|[`Location`](#enums-location "Location 枚举值")|否|
-|unit|str|[`UnitOfMeasure`](#enums-unitofmeasure "UnitOfMeasure 枚举值")|否|
+|value|str||Yes|
+|context|str|[`ReadingContext`](#enums-readingcontext "ReadingContext Enumeration Value")|No|
+|format|str|[`ValueFormat`](#enums-valueformat "ValueFormat Enumeration Value")|No|
+|measurand|str|[`Measurand`](#enums-measurand "Measurand Enumeration Value")|No|
+|phase|str|[`Phase`](#enums-phase "Phase Enumeration Value")|No|
+|location|str|[`Location`](#enums-location "Location Enumeration Value")|No|
+|unit|str|[`UnitOfMeasure`](#enums-unitofmeasure "UnitOfMeasure Enumeration Value")|No|
 
 ### <span id="datatypes-metervalue">`datatypes.MeterValue`</span>
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|timestamp|str|UTC 时间（YYYY-MM-DDTHH:mm:SS.000000）|是|
-|sampled_value|list|列表元素 [`SampledValue`](#datatypes-sampledvalue "SampledValue 结构数据")|否|
+|timestamp|str|UTC time (YYYY-MM-DDTHH:mm:SS.000000)|Yes|
+|sampled_value|list|List element is [`SampledValue`](#datatypes-sampledvalue "SampledValue Structured Data")|No|
 
 ### <span id="datatypes-certificatehashdata">`datatypes.CertificateHashData`</span>
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|hash_algorithm|str|[`HashAlgorithm`](#enums-hashalgorithm "HashAlgorithm 枚举值")|是|
-|issuer_name_hash|str|最大长度：128|是|
-|issuer_key_hash|str|最大长度：128|是|
-|serial_number|str|最大长度：40|是|
+|hash_algorithm|str|[`HashAlgorithm`](#enums-hashalgorithm "HashAlgorithm Enumeration Value")|Yes|
+|issuer_name_hash|str|The maximum length: 128|Yes|
+|issuer_key_hash|str|The maximum length: 128|Yes|
+|serial_number|str|The maximum length: 40|Yes|
 
 ### <span id="datatypes-firmware">`datatypes.Firmware`</span>
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|location|str|最大长度：512|是|
-|retrieve_date_time|str|UTC 时间（YYYY-MM-DDTHH:mm:SS.000000）|是|
-|signing_certificate|str|最大长度：5500|是|
-|signature|str|最大长度：800|是|
-|install_date_time|str|UTC 时间（YYYY-MM-DDTHH:mm:SS.000000）|否|
+|location|str|The maximum length: 512|Yes|
+|retrieve_date_time|str|UTC time (YYYY-MM-DDTHH:mm:SS.000000)|Yes|
+|signing_certificate|str|The maximum length: 5500|Yes|
+|signature|str|The maximum length: 800|Yes|
+|install_date_time|str|UTC time (YYYY-MM-DDTHH:mm:SS.000000)|No|
 
 ### <span id="datatypes-logparameters">`datatypes.LogParameters`</span>
 
-**参数说明：**
+**Parameter Description:**
 
-|参数|类型|说明|是否必须|
+|Parameter|Type|Description|Required|
 |:---|:---|:---|:---|
-|remote_location|str|最大长度：512|是|
-|oldest_timestamp|str|UTC 时间（YYYY-MM-DDTHH:mm:SS.000000）|否|
-|latest_timestamp|str|UTC 时间（YYYY-MM-DDTHH:mm:SS.000000）|否|
+|remote_location|str|The maximum length: 512|Yes|
+|oldest_timestamp|str|UTC time (YYYY-MM-DDTHH:mm:SS.000000)|No|
+|latest_timestamp|str|UTC time (YYYY-MM-DDTHH:mm:SS.000000)|No|
 
-## 消息体中的枚举值
+## Enumeration Value In Message Body
 
-- 枚举值对应文件 `ocpp.v16.enums`。
+- The enumeration value corresponds to the file `ocpp.v16.enums`.
 
 ### <span id="enums-action">`enums.Action`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |Authorize|str|`Authorize`|
 |BootNotification|str|`BootNotification`|
@@ -892,7 +892,7 @@ call_result.CancelReservationPayload(
 
 ### <span id="enums-authorizationstatus">`enums.AuthorizationStatus`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |accepted|str|`Accepted`|
 |blocked|str|`Blocked`|
@@ -902,7 +902,7 @@ call_result.CancelReservationPayload(
 
 ### <span id="enums-availabilitystatus">`enums.AvailabilityStatus`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |accepted|str|`Accepted`|
 |rejected|str|`Rejected`|
@@ -910,28 +910,28 @@ call_result.CancelReservationPayload(
 
 ### <span id="enums-availabilitytype">`enums.AvailabilityType`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |inoperative|str|`Inoperative`|
 |operative|str|`Operative`|
 
 ### <span id="enums-cancelreservationstatus">`enums.CancelReservationStatus`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |accepted|str|`Accepted`|
 |rejected|str|`Rejected`|
 
 ### <span id="enums-certificatesignedstatus">`enums.CertificateSignedStatus`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |accepted|str|`Accepted`|
 |rejected|str|`Rejected`|
 
 ### <span id="enums-certificatestatus">`enums.CertificateStatus`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |accepted|str|`Accepted`|
 |rejected|str|`Rejected`|
@@ -939,14 +939,14 @@ call_result.CancelReservationPayload(
 
 ### <span id="enums-certificateuse">`enums.CertificateUse`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |central_system_root_certificate|str|`CentralSystemRootCertificate`|
 |manufacturer_root_certificate|str|`ManufacturerRootCertificate`|
 
 ### <span id="enums-chargepointerrorcode">`enums.ChargePointErrorCode`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |connector_lock_failure|str|`ConnectorLockFailure`|
 |ev_communication_error|str|`EVCommunicationError`|
@@ -967,7 +967,7 @@ call_result.CancelReservationPayload(
 
 ### <span id="enums-chargepointstatus">`enums.ChargePointStatus`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |available|str|`Available`|
 |preparing|str|`Preparing`|
@@ -981,7 +981,7 @@ call_result.CancelReservationPayload(
 
 ### <span id="enums-chargingprofilekindtype">`enums.ChargingProfileKindType`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |absolute|str|`Absolute`|
 |recurring|str|`Recurring`|
@@ -989,7 +989,7 @@ call_result.CancelReservationPayload(
 
 ### <span id="enums-chargingprofilepurposetype">`enums.ChargingProfilePurposeType`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |charge_point_max_profile|str|`ChargePointMaxProfile`|
 |tx_default_profile|str|`TxDefaultProfile`|
@@ -997,7 +997,7 @@ call_result.CancelReservationPayload(
 
 ### <span id="enums-chargingprofilestatus">`enums.ChargingProfileStatus`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |accepted|str|`Accepted`|
 |rejected|str|`Rejected`|
@@ -1005,14 +1005,14 @@ call_result.CancelReservationPayload(
 
 ### <span id="enums-chargingrateunittype">`enums.ChargingRateUnitType`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |watts|str|`W`|
 |amps|str|`A`|
 
 ### <span id="enums-cistringtype">`enums.CiStringType`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |ci_string_20|int|`20`|
 |ci_string_25|int|`25`|
@@ -1022,21 +1022,21 @@ call_result.CancelReservationPayload(
 
 ### <span id="enums-clearcachestatus">`enums.ClearCacheStatus`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |accepted|str|`Accepted`|
 |rejected|str|`Rejected`|
 
 ### <span id="enums-clearchargingprofilestatus">`enums.ClearChargingProfileStatus`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |accepted|str|`Accepted`|
 |unknown|str|`Unknown`|
 
 ### <span id="enums-configurationstatus">`enums.ConfigurationStatus`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |accepted|str|`Accepted`|
 |rejected|str|`Rejected`|
@@ -1045,7 +1045,7 @@ call_result.CancelReservationPayload(
 
 ### <span id="enums-configurationkey">`enums.ConfigurationKey`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |allow_offline_tx_for_unknown_id|str|`AllowOfflineTxForUnknownId`|
 |authorization_cache_enabled|str|`AuthorizationCacheEnabled`|
@@ -1104,7 +1104,7 @@ call_result.CancelReservationPayload(
 
 ### <span id="enums-datatransferstatus">`enums.DataTransferStatus`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |accepted|str|`Accepted`|
 |rejected|str|`Rejected`|
@@ -1113,7 +1113,7 @@ call_result.CancelReservationPayload(
 
 ### <span id="enums-deletecertificatestatus">`enums.DeleteCertificateStatus`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |accepted|str|`Accepted`|
 |failed|str|`Failed`|
@@ -1121,7 +1121,7 @@ call_result.CancelReservationPayload(
 
 ### <span id="enums-diagnosticsstatus">`enums.DiagnosticsStatus`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |idle|str|`Idle`|
 |uploaded|str|`Uploaded`|
@@ -1130,7 +1130,7 @@ call_result.CancelReservationPayload(
 
 ### <span id="enums-firmwarestatus">`enums.FirmwareStatus`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |downloaded|str|`Downloaded`|
 |download_failed|str|`DownloadFailed`|
@@ -1149,28 +1149,28 @@ call_result.CancelReservationPayload(
 
 ### <span id="enums-genericstatus">`enums.GenericStatus`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |accepted|str|`Accepted`|
 |rejected|str|`Rejected`|
 
 ### <span id="enums-getcompositeschedulestatus">`enums.GetCompositeScheduleStatus`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |accepted|str|`Accepted`|
 |rejected|str|`Rejected`|
 
 ### <span id="enums-getinstalledcertificatestatus">`enums.GetInstalledCertificateStatus`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |accepted|str|`Accepted`|
 |not_found|str|`NotFound`|
 
 ### <span id="enums-hashalgorithm">`enums.HashAlgorithm`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |sha256|str|`SHA256`|
 |sha384|str|`SHA384`|
@@ -1178,7 +1178,7 @@ call_result.CancelReservationPayload(
 
 ### <span id="enums-location">`enums.Location`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |inlet|str|`Inlet`|
 |outlet|str|`Outlet`|
@@ -1188,14 +1188,14 @@ call_result.CancelReservationPayload(
 
 ### <span id="enums-log">`enums.Log`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |diagnostics_log|str|`DiagnosticsLog`|
 |security_log|str|`SecurityLog`|
 
 ### <span id="enums-logstatus">`enums.LogStatus`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |accepted|str|`Accepted`|
 |rejected|str|`Rejected`|
@@ -1203,7 +1203,7 @@ call_result.CancelReservationPayload(
 
 ### <span id="enums-measurand">`enums.Measurand`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |current_export|str|`Current.Export`|
 |current_import|str|`Current.Import`|
@@ -1230,7 +1230,7 @@ call_result.CancelReservationPayload(
 
 ### <span id="enums-messagetrigger">`enums.MessageTrigger`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |boot_notification|str|`BootNotification`|
 |firmware_status_notification|str|`FirmwareStatusNotification`|
@@ -1243,7 +1243,7 @@ call_result.CancelReservationPayload(
 
 ### <span id="enums-phase">`enums.Phase`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |l1|str|`L1`|
 |l2|str|`L2`|
@@ -1258,7 +1258,7 @@ call_result.CancelReservationPayload(
 
 ### <span id="enums-readingcontext">`enums.ReadingContext`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |interruption_begin|str|`Interruption.Begin`|
 |interruption_end|str|`Interruption.End`|
@@ -1271,7 +1271,7 @@ call_result.CancelReservationPayload(
 
 ### <span id="enums-reason">`enums.Reason`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |emergency_stop|str|`EmergencyStop`|
 |ev_disconnected|str|`EVDisconnected`|
@@ -1287,14 +1287,14 @@ call_result.CancelReservationPayload(
 
 ### <span id="enums-recurrencykind">`enums.RecurrencyKind`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |daily|str|`Daily`|
 |weekly|str|`Weekly`|
 
 ### <span id="enums-registrationstatus">`enums.RegistrationStatus`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |accepted|str|`Accepted`|
 |pending|str|`Pending`|
@@ -1302,14 +1302,14 @@ call_result.CancelReservationPayload(
 
 ### <span id="enums-remotestartstopstatus">`enums.RemoteStartStopStatus`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |accepted|str|`Accepted`|
 |rejected|str|`Rejected`|
 
 ### <span id="enums-reservationstatus">`enums.ReservationStatus`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |accepted|str|`Accepted`|
 |faulted|str|`Faulted`|
@@ -1319,21 +1319,21 @@ call_result.CancelReservationPayload(
 
 ### <span id="enums-resetstatus">`enums.ResetStatus`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |accepted|str|`Accepted`|
 |rejected|str|`Rejected`|
 
 ### <span id="enums-resettype">`enums.ResetType`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |hard|str|`Hard`|
 |soft|str|`Soft`|
 
 ### <span id="enums-triggermessagestatus">`enums.TriggerMessageStatus`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |accepted|str|`Accepted`|
 |rejected|str|`Rejected`|
@@ -1341,7 +1341,7 @@ call_result.CancelReservationPayload(
 
 ### <span id="enums-unitofmeasure">`enums.UnitOfMeasure`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |wh|str|`Wh`|
 |kwh|str|`kWh`|
@@ -1363,7 +1363,7 @@ call_result.CancelReservationPayload(
 
 ### <span id="enums-unlockstatus">`enums.UnlockStatus`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |unlocked|str|`Unlocked`|
 |unlock_failed|str|`UnlockFailed`|
@@ -1371,7 +1371,7 @@ call_result.CancelReservationPayload(
 
 ### <span id="enums-updatefirmwarestatus">`enums.UpdateFirmwareStatus`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |accepted|str|`Accepted`|
 |rejected|str|`Rejected`|
@@ -1381,7 +1381,7 @@ call_result.CancelReservationPayload(
 
 ### <span id="enums-uploadlogstatus">`enums.UploadLogStatus`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |bad_message|str|`BadMessage`|
 |idle|str|`Idle`|
@@ -1393,7 +1393,7 @@ call_result.CancelReservationPayload(
 
 ### <span id="enums-updatestatus">`enums.UpdateStatus`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |accepted|str|`Accepted`|
 |failed|str|`Failed`|
@@ -1402,14 +1402,14 @@ call_result.CancelReservationPayload(
 
 ### <span id="enums-updatetype">`enums.UpdateType`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |differential|str|`Differential`|
 |full|str|`Full`|
 
 ### <span id="enums-valueformat">`enums.ValueFormat`</span>
 
-|枚举值|数据类型|对应数值|
+|Enumeration Value|Data Type|Corresponding Value|
 |:---|:---|:---|
 |raw|str|`Raw`|
 |signed_data|str|`SignedData`|
