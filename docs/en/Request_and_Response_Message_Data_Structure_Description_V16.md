@@ -1,5 +1,7 @@
 # OCPP v1.6 Version Request and Response Message Data Structure Description
 
+[中文](../zh/请求与应答消息数据结构说明_V16.md) | English
+
 - The relevant data module of OCPP v1.6 version is under the path `ocpp.v16`
 - All message data structures are abstracted into classes corresponding to the message names. The parameters for class instantiation are the parameters that need to be included in the message body. Just instantiate the corresponding request message class object or response message class object.
 

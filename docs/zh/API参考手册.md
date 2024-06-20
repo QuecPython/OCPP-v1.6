@@ -10,18 +10,18 @@
 
 本文主要分为两个模块：
 
-1. `ChargePoint` 基类的相关接口与关联装饰器的介绍与使用说明
-2. 基于 `ChargePoint` 基类实现数据发送和接收接口的二次开发示例
+1. `ChargePoint` 基类的相关接口与关联装饰器的介绍与使用说明。
+2. 基于 `ChargePoint` 基类实现数据发送和接收接口的二次开发示例。
 
 ## 充电站/充电点抽象类
 
 ### `ChargePoint`
 
-- `ocpp.charge_point.ChargePoint` 为一个充电站/充电点抽象类
+- `ocpp.charge_point.ChargePoint` 为一个充电站/充电点抽象。
 - 该抽象类封装了基于 websocket 协议的数据发送 [`call`](#cp-call) 接口和用于接收服务器消息并处理的 [`start`](#cp-start) 接口。
 - 该抽象类的二次开发，需要配合 [`ocpp.routing.on`](#routing-on) 和 [`ocpp.routing.atfer`](#routing-after) 装饰器封装接收消息处理函数。
-- 该抽象类通常在对应版本中进行了继承，如：`ocpp.v16.ChargePoint`，添加了 [`_call`](#cp-_call)，[`_call_result`](#cp-_call_result)，[`_ocpp_version`](#cp-_ocpp_version) 属性值
-- 该模块基于 websocket 协议，需使用 [QuecPython uwebscoket](https://python.quectel.com/doc/API_reference/zh/networklib/uwebsocket.html "QuecPython uwebsocket 模块使用说明") 模块
+- 该抽象类通常在对应版本中进行了继承，如：`ocpp.v16.ChargePoint`，添加了 [`_call`](#cp-_call)，[`_call_result`](#cp-_call_result)，[`_ocpp_version`](#cp-_ocpp_version) 属性值。
+- 该模块基于 websocket 协议，需使用 [QuecPython uwebscoket](https://python.quectel.com/doc/API_reference/zh/networklib/uwebsocket.html "QuecPython uwebsocket 模块使用说明") 模块。
 
 #### 初始化
 
@@ -29,21 +29,21 @@
 from usr.tools import uwebsocket
 from usr.ocpp.v16 import ChargePoint as cp
 
-# 建议使用设备 IMEI 或设备 MAC 地址做为设备唯一标识
+# 建议使用设备 IMEI 或设备 MAC 地址做为设备唯一标识。
 IMEI = "XXXX"
-# 对应服务器的 IP 地址
+# 对应服务器的 IP 地址。
 host = "xxx.xxx.xxx.xxx"
-# 对应服务器的端口号
+# 对应服务器的端口号。
 port = "xxxx"
-# 实例化一个 uwebsocket 对象
+# 实例化一个 uwebsocket 对象。
 ws = uwebsocket.Client.connect(
     "ws://{host}:{port}/{IMEI}",
-    # 在 header 中添加对应的 OCPP 版本号用于服务端进行识别，不同的服务端有不同的要求，按实际的情况进行填写
+    # 在 header 中添加对应的 OCPP 版本号用于服务端进行识别，不同的服务端有不同的要求，按实际的情况进行填写。
     headers={"Sec-WebSocket-Protocol": "ocpp1.6.0"},
     debug=False
 )
 
-# 实例化 ChargePoint 对象
+# 实例化 ChargePoint 对象。
 cp = ChargePoint(IMEI, ws)
 ```
 
@@ -68,9 +68,9 @@ cp = ChargePoint(IMEI, ws)
 ```python
 import _thread
 
-# 设置线程栈大小，根据实际使用情况设置
+# 设置线程栈大小，根据实际使用情况设置。
 _thread.stack_size(0x4000)
-# 启动一个线程用于接收和解析服务器下发的数据
+# 启动一个线程用于接收和解析服务器下发的数据。
 _thread.start_new_thread(cp.start, ())
 ```
 
@@ -82,17 +82,17 @@ _thread.start_new_thread(cp.start, ())
 ```python
 class ChargePoint(cp):
 
-    # 客户端发送请求认证接口
+    # 客户端发送请求认证接口。
     def send_authorize(self):
-        # 使用 AuthorizePayload 类生成客户端请求认证接口的数据结构体
+        # 使用 AuthorizePayload 类生成客户端请求认证接口的数据结构体。
         request = self._call.AuthorizePayload(
             id_tag="xxx",
         )
-        # 调用 call 方法发送消息并等待接收应答
+        # 调用 call 方法发送消息并等待接收应答。
         response = self.call(request)
         logger.info("response %s" % response)
 
-        # 判断应答解析后是否为请求认证接口的应答数据结构体，是则进行应答数据的处理
+        # 判断应答解析后是否为请求认证接口的应答数据结构体，是则进行应答数据的处理。
         if isinstance(response, self._call_result.AuthorizePayload):
             logger.info("id_tag_info %s." % response.id_tag_info)
 ```
@@ -114,13 +114,13 @@ class ChargePoint(cp):
 #### <span id="cp-_call">`ChargePoint._call`</span>
 
 - 当从对应版本模块中导入该类时，则会有该属性，为对应版本的 `call` 模块，如：`ocpp.v16.ChargePoint._call` 等价于 `ocpp.v16.call`。
-- 该属性主要用于二次开发时，封装接口时方便使用
+- 该属性主要用于二次开发时，封装接口时方便使用。
 - [OCPP v1.6 请求消息数据结构](./请求与应答消息数据结构说明_V16.md#request-message-structure)
 
 #### <span id="cp-_call_result">`ChargePoint._call_result`</span>
 
 - 当从对应版本模块中导入该类时，则会有该属性，为对应版本的 `call_result` 模块，如：`ocpp.v16.ChargePoint._call_result` 等价于 `ocpp.v16.call_result`。
-- 该属性主要用于二次开发时，封装接口时方便使用
+- 该属性主要用于二次开发时，封装接口时方便使用。
 - [OCPP v1.6 应答消息数据结构](./请求与应答消息数据结构说明_V16.md#response-message-structure)
 
 #### <span id="cp-_ocpp_version">`ChargePoint._ocpp_version`</span>
@@ -132,7 +132,7 @@ class ChargePoint(cp):
 ### <span id="routing-on">`ocpp.routing.on`</span>
 
 - 该装饰器用于处理对应服务器下发消息的封装函数。
-- 被装饰的函数入参为接收消息的数据结构信息，返回对应消息的应答的数据结构信息，用于发送给服务器进行消息应答
+- 被装饰的函数入参为接收消息的数据结构信息，返回对应消息的应答的数据结构信息，用于发送给服务器进行消息应答。
 
 ```python
 class ChargePoint(cp):
@@ -146,7 +146,7 @@ class ChargePoint(cp):
         # 当收到消息后，可以在此处进行业务功能的处理，
         # 或者先进行应答，然后再在 ocpp.routing.after 装饰的函数内进行业务处理。
 
-        # 该函数必须返回对应消息的应答消息体，用于应答服务器消息
+        # 该函数必须返回对应消息的应答消息体，用于应答服务器消息。
         return self._call_result.CancelReservationPayload(
             status=CancelReservationStatus.accepted
         )
@@ -163,7 +163,7 @@ class ChargePoint(cp):
 ### <span id="routing-after">`ocpp.routing.after`</span>
 
 - 该装饰器用于处理对应服务器下发消息的封装函数，其在 `ocpp.routing.on` 装饰的函数调用之后进行调用。
-- 被装饰的函数入参为接收消息的数据结构信息，返回值无特殊要求
+- 被装饰的函数入参为接收消息的数据结构信息，返回值无特殊要求。
 
 ```python
 class ChargePoint(cp):
@@ -173,7 +173,7 @@ class ChargePoint(cp):
     @after(Action.CancelReservation, call_unique_id_required=True)
     def after_cancel_reservation(self, reservation_id, call_unique_id):
         logger.info("reservation_id %s, call_unique_id %s" % (reservation_id, call_unique_id))
-        # 可以在此处处理对应的业务功能，该函数对返回值无特殊要求
+        # 可以在此处处理对应的业务功能，该函数对返回值无特殊要求。
         return
 ```
 
@@ -186,36 +186,36 @@ class ChargePoint(cp):
 
 ## 基于 `ChargePoint` 二次开发示例
 
-- 该抽象类封装了基于 websocket 协议，需要实例化 `uwebsocket` 对象做为参数，进行 `ChargePoint` 模块的初始化；
+- 该抽象类封装了基于 websocket 协议，需要实例化 `uwebsocket` 对象做为参数，进行 `ChargePoint` 模块的初始化。
 - 使用时，从对应的版本中导入 `ChargePoint` 类，如：`from usr.ocpp.v16 import ChargePoint as cp`。
 
 **注意：**
 
-以下只分别列出了一个客户端发送消息和一个客户端接收消息的处理函数的示例做为参考，实际项目需要使用哪些请求消息和接收消息，需要根据项目的实际要求进行开发
+以下只分别列出了一个客户端发送消息和一个客户端接收消息的处理函数的示例做为参考，实际项目需要使用哪些请求消息和接收消息，需要根据项目的实际要求进行开发。
 
 ```python
 import utime
 import _thread
 # 导入 uwebsocket 模块，实例化对象，用于 ChargePoint 类。
 from usr.tools import uwebsocket, logging
-# 导入 v16 版本的 ChargePoint 做为项目基类
+# 导入 v16 版本的 ChargePoint 做为项目基类。
 from usr.ocpp.v16 import ChargePoint as cp
 
 
-# 基于 v16 版本的项目基类进行二次开发，封装需要用到的客户端发送接口和消息接收的接口
+# 基于 v16 版本的项目基类进行二次开发，封装需要用到的客户端发送接口和消息接收的接口。
 class ChargePoint(cp):
 
-    # 客户端发送请求认证接口
+    # 客户端发送请求认证接口。
     def send_authorize(self):
-        # 使用 AuthorizePayload 类生成客户端请求认证接口的数据结构体
+        # 使用 AuthorizePayload 类生成客户端请求认证接口的数据结构体。
         request = self._call.AuthorizePayload(
             id_tag="xxx",
         )
-        # 调用 call 方法发送消息并等待接收应答
+        # 调用 call 方法发送消息并等待接收应答。
         response = self.call(request)
         logger.info("response %s" % response)
 
-        # 判断应答解析后是否为请求认证接口的应答数据结构体，是则进行应答数据的处理
+        # 判断应答解析后是否为请求认证接口的应答数据结构体，是则进行应答数据的处理。
         if isinstance(response, self._call_result.AuthorizePayload):
             logger.info("id_tag_info %s." % response.id_tag_info)
 
@@ -228,7 +228,7 @@ class ChargePoint(cp):
         # 当收到消息后，可以在此处进行业务功能的处理，
         # 或者先进行应答，然后再在 ocpp.routing.after 装饰的函数内进行业务处理。
 
-        # 该函数必须返回对应消息的应答消息体，用于应答服务器消息
+        # 该函数必须返回对应消息的应答消息体，用于应答服务器消息。
         return self._call_result.CancelReservationPayload(
             status=CancelReservationStatus.accepted
         )
@@ -238,32 +238,32 @@ class ChargePoint(cp):
     @after(Action.CancelReservation)
     def after_cancel_reservation(self, reservation_id):
         logger.info("reservation_id %s" % (reservation_id))
-        # 可以在此处处理对应的业务功能，该函数对返回值无特殊要求
+        # 可以在此处处理对应的业务功能，该函数对返回值无特殊要求。
         return
 
-# 建议使用设备 IMEI 或设备 MAC 地址做为设备标识
+# 建议使用设备 IMEI 或设备 MAC 地址做为设备标识。
 IMEI = "XXXX"
-# 对应服务器的 IP 地址
+# 对应服务器的 IP 地址。
 host = "xxx.xxx.xxx.xxx"
-# 对应服务器的端口号
+# 对应服务器的端口号。
 port = "xxxx"
-# 实例化一个 uwebsocket 对象
+# 实例化一个 uwebsocket 对象。
 ws = uwebsocket.Client.connect(
     "ws://{host}:{port}/{IMEI}",
-    # 在 header 中添加对应的 OCPP 版本号用于服务端进行识别，不同的服务端有不同的要求，按实际的情况进行填写
+    # 在 header 中添加对应的 OCPP 版本号用于服务端进行识别，不同的服务端有不同的要求，按实际的情况进行填写。
     headers={"Sec-WebSocket-Protocol": "ocpp1.6.0"},
     debug=False
 )
 
-# 实例化二次开发的包含具体业务功能的 ChargePoint 对象
+# 实例化二次开发的包含具体业务功能的 ChargePoint 对象。
 cp = ChargePoint(IMEI, ws)
 
-# 启动一个线程用于接收服务器下发的数据
+# 启动一个线程用于接收服务器下发的数据。
 _thread.start_new_thread(cp.start, ())
 
-# 发送请求认证消息
+# 发送请求认证消息。
 cp.send_authorize()
 
-# 等待接收服务器数据
+# 等待接收服务器数据。
 utime.sleep(10)
 ```
