@@ -1,5 +1,7 @@
 # OCPP
 
+[中文](./README_ZH.md) | English
+
 ## Introduction
 
 This is based on QuecPython.
@@ -80,7 +82,7 @@ if __name__ == "__main__":
 
 ## Project Files Description
 
-```
+```shell
 |-- code
     |-- ocpp
         |-- v16
@@ -103,26 +105,30 @@ if __name__ == "__main__":
     |-- requirements.txt
     |-- v16_server_demo.py
 |-- docs
+    |-- docs/en
+        |-- docs/en/API_Reference.md
+    |-- docs/zh
+        |-- docs/zh/API说明手册.md
     |-- OCPP_1.6_documentation_2019_12-2.zip
 ```
 
 - `code` floder is incloud all OCPP client codes.
-    + `code/ocpp` floder is incloud ocpp procotal codes.
-        + `code/ocpp/v16/call.py` is incloud all request data format.
-        + `code/ocpp/v16/call_result.py` is incloud all response data format.
-        + `code/ocpp/v16/datatypes.py` is incloud some data format for part of request data.
-        + `code/ocpp/v16/enums.py` is incloud some enumes of request / response data.
-        + `code/ocpp/charge_point.py` is charge point class.
-    + `code/tools` floder is incloud some auxiliary function module.
-        + `code/tools/logging.py` is log module.
-        + `code/tools/uuid.py` is uuid module.
-        + `code/tools/uwebsocket.py` is client of websocket module.
-    + `code/ocpp/v16_client_qpy_demo.py` is incloud all charge point request demo of ocpp.
+  - `code/ocpp` floder is incloud ocpp procotal codes.
+    - `code/ocpp/v16/call.py` is incloud all request data format.
+    - `code/ocpp/v16/call_result.py` is incloud all response data format.
+    - `code/ocpp/v16/datatypes.py` is incloud some data format for part of request data.
+    - `code/ocpp/v16/enums.py` is incloud some enumes of request / response data.
+    - `code/ocpp/charge_point.py` is charge point class.
+  - `code/tools` floder is incloud some auxiliary function module.
+    - `code/tools/logging.py` is log module.
+    - `code/tools/uuid.py` is uuid module.
+    - `code/tools/uwebsocket.py` is client of websocket module.
+  - `code/ocpp/v16_client_qpy_demo.py` is incloud all charge point request demo of ocpp.
 - `demo` floder is incloud OCPP server demo based on Cpython.
-    + `demo/requirements.txt` is incloud dependency packages of OCPP server demo running environment.
-    + `demo/v16_server_demo.py` is OCPP server demo code based on Cpython.
+  - `demo/requirements.txt` is incloud dependency packages of OCPP server demo running environment.
+  - `demo/v16_server_demo.py` is OCPP server demo code based on Cpython.
 - `docs` floder is incloud OCPP protocal documents.
-    + `docs/OCPP_1.6_documentation_2019_12-2.zip` is OCPP v1.6 protocal documents.
+  - `docs/OCPP_1.6_documentation_2019_12-2.zip` is OCPP v1.6 protocal documents.
 
 ## How To Use
 
@@ -132,15 +138,15 @@ if __name__ == "__main__":
 
 #### 1. Install environments
 
-1. Operating System: Window or Linux.
+- Operating System: Window or Linux.
 
-2. Language: Python (Python-3.11.2).
+- Language: Python (Python-3.11.2).
 
-3. Dependency packages: `pip install -r demo/requirements.txt`.
+- Dependency packages: `pip install -r demo/requirements.txt`.
 
 #### 2. Config server and running demo
 
-1. Change your server port in `demo/v16_server_demo.py`.
+- Change your server port in `demo/v16_server_demo.py`.
 
 ```python
 async def main():
@@ -154,7 +160,7 @@ async def main():
     await server.wait_closed()
 ```
 
-2. Running `python demo/v16_server_demo.py`. When output `INFO:root:WebSocket Server Started`, the server is started.
+- Running `python demo/v16_server_demo.py`. When output `INFO:root:WebSocket Server Started`, the server is started.
 
 ```python
 >>> python v16_server_demo.py
@@ -163,7 +169,7 @@ INFO:websockets.server:server listening on 0.0.0.0:31499
 INFO:root:WebSocket Server Started
 ```
 
-### Running OCPP Client.
+### Running OCPP Client
 
 #### 1. Running environment
 
@@ -171,7 +177,7 @@ You need to use our QuecPython module.
 
 #### 2. Config client and running demo
 
-1. Config your server host and port in `code/ocpp/v16_client_qpy_demo.py`
+- Config your server host and port in `code/ocpp/v16_client_qpy_demo.py`
 
 ```python
 if __name__ == "__main__":
@@ -187,16 +193,40 @@ if __name__ == "__main__":
     utime.sleep_ms(200)
 ```
 
-2. Download code to QuecPython module
+- Download code to QuecPython module
 
 **Note:**
 
-> You can find documents in [QuecPython Document Center](https://python.quectel.com/doc/Getting_started/en/index.html) for how to download python code and running python demo in our QuecPython module 
+> You can find documents in [QuecPython Document Center](https://python.quectel.com/doc/Getting_started/en/index.html) for how to download python code and running python demo in our QuecPython module
 
-You can download full `code` floder to our QuecPython module and run `v16_client_qpy_demo.py` to test ocpp Charging Station / Charge point.
+You can download full `code` floder to our QuecPython module and run `v16_client_qpy_demo.py` to test OCPP Charging Station / Charge point.
 
 You can see log `Connected to central system.` in our QPYcom REPL, than the `BootNotification` message is sented to server.
 
 **Note:**
 
 > You can refer to `code.ocpp.v16_client_qpy_demo.py` to write client requests that conform to business logic.
+
+## Usage
+
+- [API Reference Manual](./docs/en/API_Reference.md)
+- [Client Example Code](./code/v16_client_qpy_demo.py)
+- [Server Example Code](./demo/v16_server_demo.py)
+
+## Contribution
+
+We welcome contributions to improve this project! Please follow these steps to contribute:
+
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature/your-feature`).
+3. Commit your changes (`git commit -m 'Add your feature'`).
+4. Push to the branch (`git push origin feature/your-feature`).
+5. Open a Pull Request.
+
+## License
+
+This project is licensed under the Apache License. See the [LICENSE](./LICENSE) file for details.
+
+## Support
+
+If you have any questions or need support, please refer to the [QuecPython documentation](https://python.quectel.com/doc/en) or open an issue in this repository.
