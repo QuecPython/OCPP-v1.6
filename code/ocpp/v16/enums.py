@@ -159,24 +159,6 @@ class ChargePointErrorCode(StrEnum):
     under_voltage = "UnderVoltage"
     weak_signal = "WeakSignal"
 
-    # Soon to be deprecated enums
-    connectorLockFailure = "ConnectorLockFailure"
-    evCommunicationError = "EVCommunicationError"
-    groundFailure = "GroundFailure"
-    highTemperature = "HighTemperature"
-    internalError = "InternalError"
-    localListConflict = "LocalListConflict"
-    noError = "NoError"
-    otherError = "OtherError"
-    overCurrentFailure = "OverCurrentFailure"
-    overVoltage = "OverVoltage"
-    powerMeterFailure = "PowerMeterFailure"
-    powerSwitchFailure = "PowerSwitchFailure"
-    readerFailure = "ReaderFailure"
-    resetFailure = "ResetFailure"
-    underVoltage = "UnderVoltage"
-    weakSignal = "WeakSignal"
-
 
 class ChargePointStatus(StrEnum):
     """
@@ -199,10 +181,6 @@ class ChargePointStatus(StrEnum):
     reserved = "Reserved"
     unavailable = "Unavailable"
     faulted = "Faulted"
-
-    # Soon to be deprecated enums
-    suspendedevse = "SuspendedEVSE"
-    suspendedev = "SuspendedEV"
 
 
 class ChargingProfileKindType(StrEnum):
@@ -259,11 +237,6 @@ class ChargingProfilePurposeType(StrEnum):
     tx_default_profile = "TxDefaultProfile"
     tx_profile = "TxProfile"
 
-    # Soon to be deprecated enums
-    chargepointmaxprofile = "ChargePointMaxProfile"
-    txdefaultprofile = "TxDefaultProfile"
-    txprofile = "TxProfile"
-
 
 class ChargingProfileStatus(StrEnum):
     """
@@ -273,8 +246,6 @@ class ChargingProfileStatus(StrEnum):
     accepted = "Accepted"
     rejected = "Rejected"
     not_supported = "NotSupported"
-    # Soon to be deprecated enums
-    notSupported = "NotSupported"
 
 
 class ChargingRateUnitType(StrEnum):
@@ -326,10 +297,6 @@ class ConfigurationStatus(StrEnum):
     rejected = "Rejected"
     reboot_required = "RebootRequired"
     not_supported = "NotSupported"
-
-    # Soon to be deprecated enums
-    rebootRequired = "RebootRequired"
-    notSupported = "NotSupported"
 
 
 class ConfigurationKey(StrEnum):
@@ -416,10 +383,6 @@ class DataTransferStatus(StrEnum):
     unknown_message_id = "UnknownMessageId"
     unknown_vendor_id = "UnknownVendorId"
 
-    # Soon to be deprecated enums
-    unknownMessageId = "UnknownMessageId"
-    unknownVendorId = "UnknownVendorId"
-
 
 class DeleteCertificateStatus(StrEnum):
     """
@@ -440,9 +403,6 @@ class DiagnosticsStatus(StrEnum):
     uploaded = "Uploaded"
     upload_failed = "UploadFailed"
     uploading = "Uploading"
-
-    # Soon to be deprecated enums
-    uploadFailed = "UploadFailed"
 
 
 class FirmwareStatus(StrEnum):
@@ -468,10 +428,6 @@ class FirmwareStatus(StrEnum):
     install_verification_failed = "InstallVerificationFailed"
     invalid_signature = "InvalidSignature"
     signature_verified = "SignatureVerified"
-
-    # Soon to be deprecated enums
-    downloadFailed = "DownloadFailed"
-    installationFailed = "InstallationFailed"
 
 
 class GenericStatus(StrEnum):
@@ -574,25 +530,6 @@ class Measurand(StrEnum):
     temperature = "Temperature"
     voltage = "Voltage"
 
-    # Soon to be deprecated enums
-    currentExport = "Current.Export"
-    currentImport = "Current.Import"
-    currentOffered = "Current.Offered"
-    energyActiveExportRegister = "Energy.Active.Export.Register"
-    energyActiveImportRegister = "Energy.Active.Import.Register"
-    energyReactiveExportRegister = "Energy.Reactive.Export.Register"
-    energyReactiveImportRegister = "Energy.Reactive.Import.Register"
-    energyActiveExportInterval = "Energy.Active.Export.Interval"
-    energyActiveImportInterval = "Energy.Active.Import.Interval"
-    energyReactiveExportInterval = "Energy.Reactive.Export.Interval"
-    energyReactiveImportInterval = "Energy.Reactive.Import.Interval"
-    powerActiveExport = "Power.Active.Export"
-    powerActiveImport = "Power.Active.Import"
-    powerFactor = "Power.Factor"
-    powerOffered = "Power.Offered"
-    powerReactiveExport = "Power.Reactive.Export"
-    powerReactiveImport = "Power.Reactive.Import"
-
 
 class MessageTrigger(StrEnum):
     """
@@ -613,13 +550,6 @@ class MessageTrigger(StrEnum):
     log_status_notification = "LogStatusNotification"
     sign_charge_point_certificate = "SignChargePointCertificate"
 
-    # Soon to be deprecated enums
-    bootNotification = "BootNotification"
-    diagnosticsStatusNotification = "DiagnosticsStatusNotification"
-    firmwareStatusNotification = "FirmwareStatusNotification"
-    meterValues = "MeterValues"
-    statusNotification = "StatusNotification"
-
 
 class Phase(StrEnum):
     """
@@ -639,14 +569,6 @@ class Phase(StrEnum):
     l2_l3 = "L2-L3"
     l3_l1 = "L3-L1"
 
-    # Soon to be deprecated enums
-    l1n = "L1-N"
-    l2n = "L2-N"
-    l3n = "L3-N"
-    l1l2 = "L1-L2"
-    l2l3 = "L2-L3"
-    l3l1 = "L3-L1"
-
 
 class ReadingContext(StrEnum):
     """
@@ -661,14 +583,6 @@ class ReadingContext(StrEnum):
     transaction_begin = "Transaction.Begin"
     transaction_end = "Transaction.End"
     trigger = "Trigger"
-
-    # Soon to be deprecated enums
-    interruptionBegin = "Interruption.Begin"
-    interruptionEnd = "Interruption.End"
-    sampleClock = "Sample.Clock"
-    samplePeriodic = "Sample.Periodic"
-    transactionBegin = "Transaction.Begin"
-    transactionEnd = "Transaction.End"
 
 
 class Reason(StrEnum):
@@ -687,15 +601,6 @@ class Reason(StrEnum):
     soft_reset = "SoftReset"
     unlock_command = "UnlockCommand"
     de_authorized = "DeAuthorized"
-
-    # Soon to be deprecated enums
-    emergencyStop = "EmergencyStop"
-    evDisconnected = "EVDisconnected"
-    hardReset = "HardReset"
-    powerLoss = "PowerLoss"
-    softReset = "SoftReset"
-    unlockCommand = "UnlockCommand"
-    deAuthorized = "DeAuthorized"
 
 
 class RecurrencyKind(StrEnum):
@@ -768,9 +673,6 @@ class TriggerMessageStatus(StrEnum):
     rejected = "Rejected"
     not_implemented = "NotImplemented"
 
-    # Soon to be deprecated enums
-    notImplemented = "NotImplemented"
-
 
 class UnitOfMeasure(StrEnum):
     """
@@ -806,10 +708,6 @@ class UnlockStatus(StrEnum):
     unlocked = "Unlocked"
     unlock_failed = "UnlockFailed"
     not_supported = "NotSupported"
-
-    # Soon to be deprecated enums
-    unlockFailed = "UnlockFailed"
-    notSupported = "NotSupported"
 
 
 class UpdateFirmwareStatus(StrEnum):
@@ -848,10 +746,6 @@ class UpdateStatus(StrEnum):
     not_supported = "NotSupported"
     version_mismatch = "VersionMismatch"
 
-    # Soon to be deprecated enums
-    notSupported = "NotSupported"
-    versionMismatch = "VersionMismatch"
-
 
 class UpdateType(StrEnum):
     """
@@ -870,6 +764,3 @@ class ValueFormat(StrEnum):
 
     raw = "Raw"
     signed_data = "SignedData"
-
-    # Soon to be deprecated enums
-    signedData = "SignedData"
